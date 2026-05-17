@@ -1,5 +1,7 @@
+export const dynamic = "force-dynamic";
+
 import { supabase } from "@/lib/supabase";
-import StockInForm from "./StockInForm";
+import StockInForm from "@/app/stock-in/StockInForm";
 
 export default async function StockInPage() {
 
