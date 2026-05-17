@@ -45,6 +45,10 @@ export default function RootLayout({
                   Stock Out
                 </Link>
 
+                <Link href="/stock-adjust" className="block hover:text-yellow-400">
+                  Stock Adjust
+                </Link>
+
                 <Link href="/movements" className="block hover:text-yellow-400">
                   Movements
                 </Link>
