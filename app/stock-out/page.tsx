@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { supabase } from "@/lib/supabase";
-import StockOutForm from "./StockOutForm";
+import StockOutForm from "@/app/stock-out/StockOutForm";
 
 export default async function StockOutPage() {
   const { data: items } = await supabase
@@ -16,7 +16,19 @@ export default async function StockOutPage() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-6">Stock Out</h1>
+      <div className="mb-8">
+        <p className="text-sm font-semibold text-orange-600">
+          STOCK MOVEMENT
+        </p>
+
+        <h1 className="text-4xl font-bold text-slate-900">
+          Stock Out
+        </h1>
+
+        <p className="mt-1 text-slate-500">
+          Issue drilling equipment or consumables to project
+        </p>
+      </div>
 
       <StockOutForm
         items={items ?? []}

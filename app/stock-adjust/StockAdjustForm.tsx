@@ -43,7 +43,10 @@ export default function StockAdjustForm({
     const result = await res.json();
 
     if (result.success) {
-      setMessage(`ปรับยอดสำเร็จ ส่วนต่าง = ${result.difference}`);
+      setMessage(
+        `ปรับยอดสำเร็จ ส่วนต่าง = ${result.difference}`
+      );
+
       setForm({
         item_id: "",
         actual_stock: "",
@@ -55,19 +58,31 @@ export default function StockAdjustForm({
   }
 
   return (
-    <div className="bg-white rounded shadow p-6 max-w-2xl">
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="max-w-3xl rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold text-slate-900">
+          Stock Adjustment
+        </h2>
+
+        <p className="mt-1 text-slate-500">
+          Adjust stock quantity after physical counting
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-5">
         <select
           name="item_id"
           value={form.item_id}
           onChange={handleChange}
-          className="w-full border rounded p-2"
+          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
           required
         >
           <option value="">-- เลือก Item --</option>
+
           {items.map((item) => (
             <option key={item.id} value={item.id}>
-              {item.item_code} - {item.item_name} | ในระบบ {item.current_stock} {item.unit}
+              {item.item_code} - {item.item_name} |
+              ระบบ = {item.current_stock} {item.unit}
             </option>
           ))}
         </select>
@@ -78,7 +93,7 @@ export default function StockAdjustForm({
           placeholder="จำนวนที่นับจริง"
           value={form.actual_stock}
           onChange={handleChange}
-          className="w-full border rounded p-2"
+          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
           required
         />
 
@@ -87,27 +102,30 @@ export default function StockAdjustForm({
           placeholder="หมายเหตุ เช่น ตรวจนับ stock เริ่มต้น / พบของขาด / พบของเกิน"
           value={form.remark}
           onChange={handleChange}
-          className="w-full border rounded p-2"
+          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
         />
 
-        <div className="flex gap-3">
+        <div className="flex gap-4 pt-2">
           <button
             type="submit"
-            className="bg-black text-white px-5 py-2 rounded"
+            className="rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white hover:bg-orange-600"
           >
             Save Adjustment
           </button>
 
-          <Link href="/" className="border px-5 py-2 rounded">
+          <Link
+            href="/"
+            className="rounded-xl border border-slate-300 px-6 py-3 font-semibold text-slate-700 hover:bg-slate-100"
+          >
             Cancel
           </Link>
         </div>
       </form>
 
       {message && (
-        <p className="mt-4 font-semibold text-green-600">
+        <div className="mt-6 rounded-xl bg-green-100 px-4 py-3 font-semibold text-green-700">
           {message}
-        </p>
+        </div>
       )}
     </div>
   );

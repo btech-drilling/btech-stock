@@ -10,6 +10,7 @@ export default async function ProjectsPage({
   searchParams: Promise<{ status?: string }>;
 }) {
   const params = await searchParams;
+
   const status = params.status ?? "ACTIVE";
 
   let query = supabase
@@ -29,81 +30,127 @@ export default async function ProjectsPage({
 
   function filterClass(value: string) {
     return status === value
-      ? "bg-black text-white px-4 py-2 rounded"
-      : "bg-white border px-4 py-2 rounded";
+      ? "rounded-xl bg-orange-500 px-4 py-2 text-white"
+      : "rounded-xl border border-slate-300 bg-white px-4 py-2 text-slate-700 hover:bg-slate-100";
   }
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Projects</h1>
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <p className="text-sm font-semibold text-orange-600">
+            PROJECT MANAGEMENT
+          </p>
+
+          <h1 className="text-4xl font-bold text-slate-900">
+            Projects
+          </h1>
+
+          <p className="mt-1 text-slate-500">
+            Drilling and exploration project tracking
+          </p>
+        </div>
 
         <Link
           href="/add-project"
-          className="bg-black text-white px-4 py-2 rounded"
+          className="rounded-xl bg-orange-500 px-5 py-3 font-semibold text-white hover:bg-orange-600"
         >
           + Add Project
         </Link>
       </div>
 
-      <div className="flex gap-3 mb-4">
-        <Link href="/projects?status=ALL" className={filterClass("ALL")}>
+      <div className="mb-5 flex gap-3">
+        <Link
+          href="/projects?status=ALL"
+          className={filterClass("ALL")}
+        >
           All
         </Link>
 
-        <Link href="/projects?status=ACTIVE" className={filterClass("ACTIVE")}>
+        <Link
+          href="/projects?status=ACTIVE"
+          className={filterClass("ACTIVE")}
+        >
           Active
         </Link>
 
-        <Link href="/projects?status=CLOSED" className={filterClass("CLOSED")}>
+        <Link
+          href="/projects?status=CLOSED"
+          className={filterClass("CLOSED")}
+        >
           Closed
         </Link>
 
-        <Link href="/projects?status=HOLD" className={filterClass("HOLD")}>
+        <Link
+          href="/projects?status=HOLD"
+          className={filterClass("HOLD")}
+        >
           Hold
         </Link>
       </div>
 
-      <div className="bg-white rounded shadow overflow-hidden">
+      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div className="border-b border-slate-200 p-5">
+          <h2 className="text-xl font-bold text-slate-900">
+            Project List
+          </h2>
+        </div>
+
         <table className="w-full">
           <thead>
-            <tr className="bg-gray-200 text-left">
-              <th className="p-3">Project Code</th>
-              <th className="p-3">Project Name</th>
-              <th className="p-3">Client</th>
-              <th className="p-3">Location</th>
-              <th className="p-3">Status</th>
-              <th className="p-3">Action</th>
+            <tr className="bg-slate-100 text-left text-sm text-slate-600">
+              <th className="p-4">Project Code</th>
+              <th className="p-4">Project Name</th>
+              <th className="p-4">Client</th>
+              <th className="p-4">Location</th>
+              <th className="p-4">Status</th>
+              <th className="p-4">Action</th>
             </tr>
           </thead>
 
           <tbody>
             {projects?.map((project) => (
-              <tr key={project.id} className="border-t">
-                <td className="p-3">{project.project_code}</td>
-                <td className="p-3">{project.project_name}</td>
-                <td className="p-3">{project.client_name}</td>
-                <td className="p-3">{project.location_text}</td>
+              <tr
+                key={project.id}
+                className="border-t border-slate-100"
+              >
+                <td className="p-4 font-semibold text-slate-800">
+                  {project.project_code}
+                </td>
 
-                <td className="p-3">
+                <td className="p-4 text-slate-700">
+                  {project.project_name}
+                </td>
+
+                <td className="p-4 text-slate-600">
+                  {project.client_name}
+                </td>
+
+                <td className="p-4 text-slate-600">
+                  {project.location_text}
+                </td>
+
+                <td className="p-4">
                   <span
                     className={
                       project.status === "ACTIVE"
-                        ? "bg-green-100 text-green-700 px-2 py-1 rounded text-xs"
+                        ? "rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700"
                         : project.status === "HOLD"
-                        ? "bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-xs"
-                        : "bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs"
+                        ? "rounded-full bg-yellow-100 px-3 py-1 text-xs font-semibold text-yellow-700"
+                        : "rounded-full bg-slate-200 px-3 py-1 text-xs font-semibold text-slate-700"
                     }
                   >
                     {project.status}
                   </span>
                 </td>
 
-                <td className="p-3">
+                <td className="p-4">
                   {project.status !== "CLOSED" ? (
                     <ProjectCloseButton id={project.id} />
                   ) : (
-                    <span className="text-gray-400">Closed</span>
+                    <span className="text-slate-400">
+                      Closed
+                    </span>
                   )}
                 </td>
               </tr>

@@ -38,7 +38,7 @@ export default function StockOutForm({
       },
       body: JSON.stringify({
         item_id: Number(form.item_id),
-        project_id: form.project_id ? Number(form.project_id) : null,
+        project_id: Number(form.project_id),
         quantity: Number(form.quantity),
         remark: form.remark,
       }),
@@ -47,7 +47,8 @@ export default function StockOutForm({
     const result = await res.json();
 
     if (result.success) {
-      setMessage("เบิกของออกสำเร็จ");
+      setMessage("เบิกของสำเร็จ");
+
       setForm({
         item_id: "",
         project_id: "",
@@ -60,19 +61,31 @@ export default function StockOutForm({
   }
 
   return (
-    <div className="bg-white rounded shadow p-6 max-w-2xl">
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="max-w-3xl rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold text-slate-900">
+          Issue Stock
+        </h2>
+
+        <p className="mt-1 text-slate-500">
+          Issue stock from warehouse to drilling project
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-5">
         <select
           name="item_id"
           value={form.item_id}
           onChange={handleChange}
-          className="w-full border rounded p-2"
+          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
           required
         >
           <option value="">-- เลือก Item --</option>
+
           {items.map((item) => (
             <option key={item.id} value={item.id}>
-              {item.item_code} - {item.item_name} | คงเหลือ {item.current_stock} {item.unit}
+              {item.item_code} - {item.item_name} | Stock:{" "}
+              {item.current_stock}
             </option>
           ))}
         </select>
@@ -81,10 +94,11 @@ export default function StockOutForm({
           name="project_id"
           value={form.project_id}
           onChange={handleChange}
-          className="w-full border rounded p-2"
+          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
           required
         >
           <option value="">-- เลือก Project --</option>
+
           {projects.map((project) => (
             <option key={project.id} value={project.id}>
               {project.project_code} - {project.project_name}
@@ -95,39 +109,42 @@ export default function StockOutForm({
         <input
           name="quantity"
           type="number"
-          placeholder="จำนวนเบิกออก"
+          placeholder="จำนวนเบิก"
           value={form.quantity}
           onChange={handleChange}
-          className="w-full border rounded p-2"
+          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
           required
         />
 
         <input
           name="remark"
-          placeholder="หมายเหตุ เช่น เบิกไปไซต์ / ใช้หลุม 26WC-01"
+          placeholder="หมายเหตุ เช่น ใช้หน้า site / เบิกด่วน / เปลี่ยน bit"
           value={form.remark}
           onChange={handleChange}
-          className="w-full border rounded p-2"
+          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
         />
 
-        <div className="flex gap-3">
+        <div className="flex gap-4 pt-2">
           <button
             type="submit"
-            className="bg-black text-white px-5 py-2 rounded"
+            className="rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white hover:bg-orange-600"
           >
             Save Stock Out
           </button>
 
-          <Link href="/" className="border px-5 py-2 rounded">
+          <Link
+            href="/"
+            className="rounded-xl border border-slate-300 px-6 py-3 font-semibold text-slate-700 hover:bg-slate-100"
+          >
             Cancel
           </Link>
         </div>
       </form>
 
       {message && (
-        <p className="mt-4 font-semibold text-green-600">
+        <div className="mt-6 rounded-xl bg-green-100 px-4 py-3 font-semibold text-green-700">
           {message}
-        </p>
+        </div>
       )}
     </div>
   );

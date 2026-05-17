@@ -17,10 +17,7 @@ export default function AddProjectPage() {
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
+    setForm({ ...form, [e.target.name]: e.target.value });
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -28,9 +25,7 @@ export default function AddProjectPage() {
 
     const res = await fetch("/api/projects/create", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form),
     });
 
@@ -52,22 +47,28 @@ export default function AddProjectPage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <Link href="/projects" className="text-sm text-gray-600 hover:underline">
-          ← Back to Projects
-        </Link>
+      <div className="mb-8">
+        <p className="text-sm font-semibold text-orange-600">
+          PROJECT MANAGEMENT
+        </p>
 
-        <h1 className="text-3xl font-bold mt-2">Add Project</h1>
+        <h1 className="text-4xl font-bold text-slate-900">
+          Add Project
+        </h1>
+
+        <p className="mt-1 text-slate-500">
+          Create a new drilling or exploration project
+        </p>
       </div>
 
-      <div className="bg-white rounded shadow p-6 max-w-2xl">
-        <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="max-w-3xl rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <input
             name="project_code"
             placeholder="Project Code เช่น SCG-2026-CHAOM"
             value={form.project_code}
             onChange={handleChange}
-            className="w-full border rounded p-2"
+            className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
             required
           />
 
@@ -76,7 +77,7 @@ export default function AddProjectPage() {
             placeholder="Project Name"
             value={form.project_name}
             onChange={handleChange}
-            className="w-full border rounded p-2"
+            className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
             required
           />
 
@@ -85,7 +86,7 @@ export default function AddProjectPage() {
             placeholder="Client Name"
             value={form.client_name}
             onChange={handleChange}
-            className="w-full border rounded p-2"
+            className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
           />
 
           <input
@@ -93,33 +94,38 @@ export default function AddProjectPage() {
             placeholder="Location"
             value={form.location_text}
             onChange={handleChange}
-            className="w-full border rounded p-2"
+            className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
           />
 
           <select
             name="status"
             value={form.status}
             onChange={handleChange}
-            className="w-full border rounded p-2"
+            className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
           >
             <option value="ACTIVE">ACTIVE</option>
-            <option value="CLOSED">CLOSED</option>
             <option value="HOLD">HOLD</option>
+            <option value="CLOSED">CLOSED</option>
           </select>
 
-          <div className="flex gap-3">
-            <button className="bg-black text-white px-5 py-2 rounded">
+          <div className="flex gap-4 pt-2">
+            <button className="rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white hover:bg-orange-600">
               Save Project
             </button>
 
-            <Link href="/projects" className="border px-5 py-2 rounded">
+            <Link
+              href="/projects"
+              className="rounded-xl border border-slate-300 px-6 py-3 font-semibold text-slate-700 hover:bg-slate-100"
+            >
               Cancel
             </Link>
           </div>
         </form>
 
         {message && (
-          <p className="mt-4 font-semibold text-green-600">{message}</p>
+          <div className="mt-6 rounded-xl bg-green-100 px-4 py-3 text-green-700">
+            {message}
+          </div>
         )}
       </div>
     </div>

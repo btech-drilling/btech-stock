@@ -25,38 +25,64 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded shadow w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-6">BTECH Login</h1>
+    <main className="flex min-h-screen items-center justify-center bg-slate-100 p-6">
+      <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-10 shadow-sm">
+        <div className="mb-8 text-center">
+          <p className="text-sm font-semibold text-orange-600">
+            BTECH STOCK SYSTEM
+          </p>
 
-        <form onSubmit={handleLogin} className="space-y-4">
-          <input
-            type="email"
-            placeholder="Email"
-            className="w-full border rounded p-2"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+          <h1 className="mt-2 text-4xl font-bold text-slate-900">
+            Login
+          </h1>
 
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full border rounded p-2"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <p className="mt-2 text-slate-500">
+            Inventory Management
+          </p>
+        </div>
 
-          <button className="w-full bg-black text-white py-2 rounded">
+        <form onSubmit={handleLogin} className="space-y-5">
+          <div>
+            <label className="mb-2 block text-sm font-semibold text-slate-700">
+              Username
+            </label>
+
+            <input
+              type="email"
+              placeholder="admin@btech.local"
+              className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+
+          <div>
+            <label className="mb-2 block text-sm font-semibold text-slate-700">
+              Password
+            </label>
+
+            <input
+              type="password"
+              placeholder="••••••••"
+              className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          <button
+            className="w-full rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white hover:bg-orange-600"
+          >
             Login
           </button>
         </form>
 
         {message && (
-          <p className="mt-4 text-red-600 font-semibold">
+          <div className="mt-6 rounded-xl bg-red-100 px-4 py-3 text-sm font-semibold text-red-700">
             {message}
-          </p>
+          </div>
         )}
       </div>
     </main>

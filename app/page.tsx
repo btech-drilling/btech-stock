@@ -24,49 +24,69 @@ export default async function Home() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Dashboard</h1>
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <p className="text-sm font-semibold text-orange-600">
+            BTECH INVENTORY CONTROL
+          </p>
+
+          <h1 className="text-4xl font-bold text-slate-900">
+            Dashboard
+          </h1>
+
+          <p className="mt-1 text-slate-500">
+            Drilling equipment, consumables, and project stock overview
+          </p>
+        </div>
 
         <Link
           href="/add-item"
-          className="bg-black text-white px-4 py-2 rounded"
+          className="rounded-xl bg-orange-500 px-5 py-3 font-semibold text-white shadow hover:bg-orange-600"
         >
           + Add Item
         </Link>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 mb-8">
-        <div className="bg-white p-6 rounded shadow">
-          <p className="text-gray-500">Total Items</p>
-          <h2 className="text-3xl font-bold">{totalItems}</h2>
+      <div className="mb-8 grid grid-cols-3 gap-5">
+        <div className="rounded-2xl bg-white p-6 shadow-sm border border-slate-200">
+          <p className="text-sm text-slate-500">Total Items</p>
+          <h2 className="mt-2 text-4xl font-bold text-slate-900">
+            {totalItems}
+          </h2>
         </div>
 
-        <div className="bg-white p-6 rounded shadow">
-          <p className="text-gray-500">Low Stock Items</p>
-          <h2 className="text-3xl font-bold text-red-600">{lowStockItems}</h2>
+        <div className="rounded-2xl bg-white p-6 shadow-sm border border-slate-200">
+          <p className="text-sm text-slate-500">Low Stock Items</p>
+          <h2 className="mt-2 text-4xl font-bold text-red-600">
+            {lowStockItems}
+          </h2>
         </div>
 
-        <div className="bg-white p-6 rounded shadow">
-          <p className="text-gray-500">System Status</p>
-          <h2 className="text-xl font-bold text-green-600">Online</h2>
+        <div className="rounded-2xl bg-slate-900 p-6 shadow-sm">
+          <p className="text-sm text-slate-300">System Status</p>
+          <h2 className="mt-2 text-2xl font-bold text-orange-400">
+            Online
+          </h2>
         </div>
       </div>
 
-      <div className="bg-white rounded shadow overflow-hidden">
-        <div className="p-4 border-b">
-          <h2 className="text-xl font-bold">Items Master</h2>
+      <div className="overflow-hidden rounded-2xl bg-white shadow-sm border border-slate-200">
+        <div className="border-b border-slate-200 p-5">
+          <h2 className="text-xl font-bold text-slate-900">
+            Items Master
+          </h2>
         </div>
 
         <table className="w-full">
           <thead>
-            <tr className="bg-gray-200 text-left">
-              <th className="p-3">Code</th>
-              <th className="p-3">Item Name</th>
-              <th className="p-3">Category</th>
-              <th className="p-3">Unit</th>
-              <th className="p-3">Min Stock</th>
-              <th className="p-3">Current Stock</th>
-              <th className="p-3">Action</th>
+            <tr className="bg-slate-100 text-left text-sm text-slate-600">
+              <th className="p-4">Code</th>
+              <th className="p-4">Item Name</th>
+              <th className="p-4">Category</th>
+              <th className="p-4">Unit</th>
+              <th className="p-4">Min Stock</th>
+              <th className="p-4">Current Stock</th>
+              <th className="p-4">Action</th>
             </tr>
           </thead>
 
@@ -77,39 +97,51 @@ export default async function Home() {
                 Number(item.minimum_stock ?? 0);
 
               return (
-                <tr key={item.id} className="border-t">
-                  <td className="p-3">{item.item_code}</td>
-                  <td className="p-3">{item.item_name}</td>
-                  <td className="p-3">{item.category}</td>
-                  <td className="p-3">{item.unit}</td>
-                  <td className="p-3">{item.minimum_stock}</td>
+                <tr key={item.id} className="border-t border-slate-100">
+                  <td className="p-4 font-semibold text-slate-800">
+                    {item.item_code}
+                  </td>
 
-<td
-  className={
-    isLowStock
-      ? "p-3 font-bold text-red-600"
-      : "p-3 font-semibold"
-  }
->
-  <div className="flex items-center gap-2">
+                  <td className="p-4 text-slate-700">
+                    {item.item_name}
+                  </td>
 
-    <span>
-      {item.current_stock}
-    </span>
+                  <td className="p-4 text-slate-600">
+                    {item.category}
+                  </td>
 
-    {isLowStock && (
-      <span className="bg-red-100 text-red-700 text-xs px-2 py-1 rounded">
-        LOW
-      </span>
-    )}
+                  <td className="p-4 text-slate-600">
+                    {item.unit}
+                  </td>
 
-  </div>
-</td>
+                  <td className="p-4 text-slate-600">
+                    {item.minimum_stock}
+                  </td>
 
-                  <td className="p-3 flex gap-3">
+                  <td className="p-4">
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={
+                          isLowStock
+                            ? "font-bold text-red-600"
+                            : "font-bold text-green-700"
+                        }
+                      >
+                        {item.current_stock}
+                      </span>
+
+                      {isLowStock && (
+                        <span className="rounded-full bg-red-100 px-2 py-1 text-xs font-semibold text-red-700">
+                          LOW
+                        </span>
+                      )}
+                    </div>
+                  </td>
+
+                  <td className="p-4 flex gap-3">
                     <Link
                       href={`/edit-item/${item.id}`}
-                      className="text-blue-600 hover:underline"
+                      className="font-semibold text-orange-600 hover:underline"
                     >
                       Edit
                     </Link>
