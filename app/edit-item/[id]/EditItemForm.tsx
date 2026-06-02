@@ -7,6 +7,7 @@ export default function EditItemForm({ item }: { item: any }) {
   const [form, setForm] = useState({
     item_code: item.item_code ?? "",
     item_name: item.item_name ?? "",
+    item_type: item.item_type ?? "CONSUMABLE",
     category: item.category ?? "",
     unit: item.unit ?? "",
     minimum_stock: item.minimum_stock ?? "",
@@ -14,7 +15,9 @@ export default function EditItemForm({ item }: { item: any }) {
 
   const [message, setMessage] = useState("");
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleChange(
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) {
     setForm({
       ...form,
       [e.target.name]: e.target.value,
@@ -31,7 +34,11 @@ export default function EditItemForm({ item }: { item: any }) {
       },
       body: JSON.stringify({
         id: item.id,
-        ...form,
+        item_code: form.item_code,
+        item_name: form.item_name,
+        item_type: form.item_type,
+        category: form.category,
+        unit: form.unit,
         minimum_stock: Number(form.minimum_stock),
       }),
     });
@@ -52,9 +59,7 @@ export default function EditItemForm({ item }: { item: any }) {
           INVENTORY MANAGEMENT
         </p>
 
-        <h1 className="text-4xl font-bold text-slate-900">
-          Edit Item
-        </h1>
+        <h1 className="text-4xl font-bold text-slate-900">Edit Item</h1>
 
         <p className="mt-1 text-slate-500">
           Update item master data. Stock quantity should be adjusted via Stock Adjust.
@@ -65,6 +70,7 @@ export default function EditItemForm({ item }: { item: any }) {
         <form onSubmit={handleSubmit} className="space-y-5">
           <input
             name="item_code"
+            placeholder="Item Code"
             value={form.item_code}
             onChange={handleChange}
             className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
@@ -73,15 +79,37 @@ export default function EditItemForm({ item }: { item: any }) {
 
           <input
             name="item_name"
+            placeholder="Item Name"
             value={form.item_name}
             onChange={handleChange}
             className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
             required
           />
 
+          <select
+            name="item_type"
+            value={form.item_type}
+            onChange={handleChange}
+            className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+            required
+          >
+            <option value="CONSUMABLE">
+              CONSUMABLE - วัสดุสิ้นเปลือง
+            </option>
+
+            <option value="TOOL">
+              TOOL - เครื่องมือ / อุปกรณ์ใช้งานซ้ำ
+            </option>
+
+            <option value="ASSET">
+              ASSET - ทรัพย์สิน / อุปกรณ์ถาวร
+            </option>
+          </select>
+
           <div className="grid grid-cols-2 gap-5">
             <input
               name="category"
+              placeholder="Category"
               value={form.category}
               onChange={handleChange}
               className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
@@ -89,6 +117,7 @@ export default function EditItemForm({ item }: { item: any }) {
 
             <input
               name="unit"
+              placeholder="Unit"
               value={form.unit}
               onChange={handleChange}
               className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
@@ -98,6 +127,7 @@ export default function EditItemForm({ item }: { item: any }) {
           <input
             name="minimum_stock"
             type="number"
+            placeholder="Minimum Stock"
             value={form.minimum_stock}
             onChange={handleChange}
             className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 
-export default function StockInForm({
+export default function StockScrapForm({
   items,
   projects,
 }: {
@@ -31,7 +31,9 @@ export default function StockInForm({
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    const res = await fetch("/api/stock-in", {
+    setMessage("กำลังบันทึก...");
+
+    const res = await fetch("/api/stock-scrap", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -47,7 +49,8 @@ export default function StockInForm({
     const result = await res.json();
 
     if (result.success) {
-      setMessage("รับของเข้า Stock สำเร็จ");
+      setMessage("บันทึก Scrap สำเร็จ");
+
       setForm({
         item_id: "",
         project_id: "",
@@ -62,10 +65,12 @@ export default function StockInForm({
   return (
     <div className="max-w-3xl rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-slate-900">Receive Stock</h2>
+        <h2 className="text-2xl font-bold text-slate-900">
+          Scrap / Damage Stock
+        </h2>
 
         <p className="mt-1 text-slate-500">
-          Add stock into central warehouse or project inventory
+          Use this form when items are damaged, lost, or discarded.
         </p>
       </div>
 
@@ -77,14 +82,15 @@ export default function StockInForm({
           className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
           required
         >
-          <option value="">-- เลือก Item --</option>
+          <option value="">-- เลือก Item ที่เสียหาย / ทิ้ง --</option>
 
           {items.map((item) => {
             const itemType = item.item_type ?? "CONSUMABLE";
 
             return (
               <option key={item.id} value={item.id}>
-                [{itemType}] {item.item_code} - {item.item_name}
+                [{itemType}] {item.item_code} - {item.item_name} | Stock:{" "}
+                {item.current_stock}
               </option>
             );
           })}
@@ -96,7 +102,7 @@ export default function StockInForm({
           onChange={handleChange}
           className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
         >
-          <option value="">-- ไม่ระบุ Project / เข้าคลังกลาง --</option>
+          <option value="">-- เลือก Project ถ้ามี --</option>
 
           {projects.map((project) => (
             <option key={project.id} value={project.id}>
@@ -108,7 +114,8 @@ export default function StockInForm({
         <input
           name="quantity"
           type="number"
-          placeholder="จำนวนรับเข้า"
+          min="1"
+          placeholder="จำนวนที่ Scrap / เสียหาย / หาย"
           value={form.quantity}
           onChange={handleChange}
           className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
@@ -117,18 +124,23 @@ export default function StockInForm({
 
         <input
           name="remark"
-          placeholder="หมายเหตุ เช่น รับของจากร้าน / คืนจากไซต์ / PO No."
+          placeholder="หมายเหตุ เช่น Rod งอ / Barrel ตกหลุม / Bit แตก / หายจากไซต์"
           value={form.remark}
           onChange={handleChange}
           className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+          required
         />
+
+        <div className="rounded-xl bg-red-50 p-4 text-sm text-red-700">
+          การบันทึก Scrap จะตัดจำนวนออกจาก Current Stock และบันทึก Movement Type = SCRAP
+        </div>
 
         <div className="flex gap-4 pt-2">
           <button
             type="submit"
-            className="rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white hover:bg-orange-600"
+            className="rounded-xl bg-red-600 px-6 py-3 font-semibold text-white hover:bg-red-700"
           >
-            Save Stock In
+            Save Scrap
           </button>
 
           <Link

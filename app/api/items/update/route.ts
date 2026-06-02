@@ -8,16 +8,24 @@ export async function POST(req: Request) {
     id,
     item_code,
     item_name,
+    item_type,
     category,
     unit,
     minimum_stock,
   } = body;
+
+  const validTypes = ["CONSUMABLE", "TOOL", "ASSET"];
+
+  const finalItemType = validTypes.includes(item_type)
+    ? item_type
+    : "CONSUMABLE";
 
   const { error } = await supabase
     .from("items")
     .update({
       item_code,
       item_name,
+      item_type: finalItemType,
       category,
       unit,
       minimum_stock,
@@ -26,10 +34,15 @@ export async function POST(req: Request) {
 
   if (error) {
     return NextResponse.json(
-      { success: false, error: error.message },
+      {
+        success: false,
+        error: error.message,
+      },
       { status: 500 }
     );
   }
 
-  return NextResponse.json({ success: true });
+  return NextResponse.json({
+    success: true,
+  });
 }

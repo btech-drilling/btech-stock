@@ -63,9 +63,7 @@ export default function StockOutForm({
   return (
     <div className="max-w-3xl rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-slate-900">
-          Issue Stock
-        </h2>
+        <h2 className="text-2xl font-bold text-slate-900">Issue Stock</h2>
 
         <p className="mt-1 text-slate-500">
           Issue stock from warehouse to drilling project
@@ -82,12 +80,16 @@ export default function StockOutForm({
         >
           <option value="">-- เลือก Item --</option>
 
-          {items.map((item) => (
-            <option key={item.id} value={item.id}>
-              {item.item_code} - {item.item_name} | Stock:{" "}
-              {item.current_stock}
-            </option>
-          ))}
+          {items.map((item) => {
+            const itemType = item.item_type ?? "CONSUMABLE";
+
+            return (
+              <option key={item.id} value={item.id}>
+                [{itemType}] {item.item_code} - {item.item_name} | Stock:{" "}
+                {item.current_stock}
+              </option>
+            );
+          })}
         </select>
 
         <select

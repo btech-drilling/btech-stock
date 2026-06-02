@@ -19,6 +19,8 @@ export default function RootLayout({
     ["Add Project", "/add-project"],
     ["Stock In", "/stock-in"],
     ["Stock Out", "/stock-out"],
+    ["Stock Return", "/stock-return"],
+    ["Stock Scrap", "/stock-scrap"],
     ["Stock Adjust", "/stock-adjust"],
     ["Movements", "/movements"],
     ["Project Usage", "/project-usage"],

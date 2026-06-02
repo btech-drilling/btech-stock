@@ -7,6 +7,7 @@ export default function AddItemPage() {
   const [form, setForm] = useState({
     item_code: "",
     item_name: "",
+    item_type: "CONSUMABLE",
     category: "",
     unit: "",
     minimum_stock: "",
@@ -15,7 +16,7 @@ export default function AddItemPage() {
   const [message, setMessage] = useState("");
 
   function handleChange(
-    e: React.ChangeEvent<HTMLInputElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) {
     setForm({
       ...form,
@@ -45,6 +46,7 @@ export default function AddItemPage() {
       setForm({
         item_code: "",
         item_name: "",
+        item_type: "CONSUMABLE",
         category: "",
         unit: "",
         minimum_stock: "",
@@ -72,6 +74,7 @@ export default function AddItemPage() {
 
       <div className="max-w-3xl rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
         <form onSubmit={handleSubmit} className="space-y-5">
+
           <div>
             <label className="mb-2 block text-sm font-semibold text-slate-700">
               Item Code
@@ -100,6 +103,32 @@ export default function AddItemPage() {
               className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
               required
             />
+          </div>
+
+          <div>
+            <label className="mb-2 block text-sm font-semibold text-slate-700">
+              Item Type
+            </label>
+
+            <select
+              name="item_type"
+              value={form.item_type}
+              onChange={handleChange}
+              className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+              required
+            >
+              <option value="CONSUMABLE">
+                CONSUMABLE - วัสดุสิ้นเปลือง
+              </option>
+
+              <option value="TOOL">
+                TOOL - เครื่องมือ / อุปกรณ์ใช้งานซ้ำ
+              </option>
+
+              <option value="ASSET">
+                ASSET - ทรัพย์สิน / อุปกรณ์ถาวร
+              </option>
+            </select>
           </div>
 
           <div className="grid grid-cols-2 gap-5">
