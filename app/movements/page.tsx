@@ -6,12 +6,13 @@ import Link from "next/link";
 export default async function MovementsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ type?: string; q?: string }>;
+  searchParams: Promise<{ type?: string; q?: string; project?: string }>;
 }) {
   const params = await searchParams;
 
   const type = params.type ?? "ALL";
   const q = params.q?.trim().toLowerCase() ?? "";
+  const project = params.project ?? "ALL";
 
   let query = supabase
     .from("stock_movements")
@@ -38,9 +39,22 @@ export default async function MovementsPage({
     query = query.eq("movement_type", type);
   }
 
+  if (project !== "ALL") {
+    query = query.eq("project_id", Number(project));
+  }
+
   const { data: rawMovements, error } = await query;
 
+  const { data: projects, error: projectsError } = await supabase
+    .from("projects")
+    .select("id, project_code, project_name")
+    .order("project_code", { ascending: true });
+
   if (error) return <div>Error: {error.message}</div>;
+
+  if (projectsError) {
+    return <div>Error: {projectsError.message}</div>;
+  }
 
   const movements =
     q === ""
@@ -62,18 +76,29 @@ export default async function MovementsPage({
           return text.includes(q);
         });
 
-  function typeLink(value: string) {
-    const href =
-      q !== ""
-        ? `/movements?type=${value}&q=${encodeURIComponent(q)}`
-        : `/movements?type=${value}`;
+  function buildUrl(nextType: string) {
+    const query = new URLSearchParams();
 
+    query.set("type", nextType);
+
+    if (project !== "ALL") {
+      query.set("project", project);
+    }
+
+    if (q !== "") {
+      query.set("q", q);
+    }
+
+    return `/movements?${query.toString()}`;
+  }
+
+  function typeLink(value: string) {
     const className =
       type === value
         ? "rounded-xl bg-orange-500 px-4 py-2 text-white"
         : "rounded-xl border border-slate-300 bg-white px-4 py-2 text-slate-700 hover:bg-slate-100";
 
-    return { href, className };
+    return { href: buildUrl(value), className };
   }
 
   function movementTypeBadgeClass(value: string) {
@@ -137,32 +162,63 @@ export default async function MovementsPage({
         <Link {...typeLink("ADJUST")}>ADJUST</Link>
       </div>
 
-      <form action="/movements" className="mb-5 flex gap-3">
-        <input type="hidden" name="type" value={type} />
+      <form
+  action="/movements"
+  className="mb-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
+>
+  <input type="hidden" name="type" value={type} />
 
-        <input
-          name="q"
-          defaultValue={q}
-          placeholder="Search item, project, remark, type..."
-          className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none focus:border-orange-500"
-        />
+  <div className="space-y-4">
+    <div>
+      <label className="mb-2 block text-sm font-semibold text-slate-600">
+        Project
+      </label>
 
-        <button
-          type="submit"
-          className="rounded-xl bg-slate-900 px-5 py-3 font-semibold text-white hover:bg-slate-800"
-        >
-          Search
-        </button>
+      <select
+        name="project"
+        defaultValue={project}
+        className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none focus:border-orange-500"
+      >
+        <option value="ALL">All Projects</option>
 
-        {q !== "" && (
-          <Link
-            href={`/movements?type=${type}`}
-            className="rounded-xl border border-slate-300 px-5 py-3 font-semibold text-slate-700 hover:bg-slate-100"
-          >
-            Clear
-          </Link>
-        )}
-      </form>
+        {(projects ?? []).map((p: any) => (
+          <option key={p.id} value={p.id}>
+            {p.project_code}
+          </option>
+        ))}
+      </select>
+    </div>
+
+    <div>
+      <label className="mb-2 block text-sm font-semibold text-slate-600">
+        Keyword
+      </label>
+
+      <input
+        name="q"
+        defaultValue={q}
+        placeholder="Search item, project, remark, type..."
+        className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none focus:border-orange-500"
+      />
+    </div>
+
+    <div className="flex gap-3">
+      <button
+        type="submit"
+        className="rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white hover:bg-orange-600"
+      >
+        Filter
+      </button>
+
+      <Link
+        href="/movements"
+        className="rounded-xl border border-slate-300 bg-white px-6 py-3 font-semibold text-slate-700 hover:bg-slate-100"
+      >
+        Clear
+      </Link>
+    </div>
+  </div>
+</form>
 
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div className="flex items-center justify-between border-b border-slate-200 p-5">
@@ -241,9 +297,7 @@ export default async function MovementsPage({
                       {Math.abs(Number(m.quantity))} {m.items?.unit}
                     </td>
 
-                    <td className="p-4 text-slate-600">
-                      {m.remark}
-                    </td>
+                    <td className="p-4 text-slate-600">{m.remark}</td>
                   </tr>
                 );
               })

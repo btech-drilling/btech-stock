@@ -179,15 +179,24 @@ export default async function Home() {
                     </div>
                   </td>
 
-                  <td className="flex gap-3 p-4">
-                    <Link
-                      href={`/edit-item/${item.id}`}
-                      className="font-semibold text-orange-600 hover:underline"
-                    >
-                      Edit
-                    </Link>
+                  <td className="p-4">
+                    <div className="flex gap-3">
+                      <Link
+                        href={`/items/${item.id}/card`}
+                        className="font-semibold text-blue-600 hover:underline"
+                      >
+                        Card
+                      </Link>
 
-                    <DeleteButton id={item.id} />
+                      <Link
+                        href={`/edit-item/${item.id}`}
+                        className="font-semibold text-orange-600 hover:underline"
+                      >
+                        Edit
+                      </Link>
+
+                      <DeleteButton id={item.id} />
+                    </div>
                   </td>
                 </tr>
               );

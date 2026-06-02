@@ -1,6 +1,6 @@
 import "./globals.css";
-import Link from "next/link";
 import AuthGuard from "./AuthGuard";
+import Sidebar from "./Sidebar";
 
 export const metadata = {
   title: "BTECH Stock System",
@@ -12,45 +12,12 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const menus = [
-    ["Dashboard", "/"],
-    ["Add Item", "/add-item"],
-    ["Projects", "/projects"],
-    ["Add Project", "/add-project"],
-    ["Stock In", "/stock-in"],
-    ["Stock Out", "/stock-out"],
-    ["Stock Return", "/stock-return"],
-    ["Stock Scrap", "/stock-scrap"],
-    ["Stock Adjust", "/stock-adjust"],
-    ["Movements", "/movements"],
-    ["Project Usage", "/project-usage"],
-  ];
-
   return (
     <html lang="en">
       <body>
         <AuthGuard>
           <div className="flex min-h-screen bg-slate-100">
-            <aside className="w-72 bg-[#0f172a] text-white p-6">
-              <div className="mb-10">
-                <h1 className="text-3xl font-bold tracking-wide">BTECH</h1>
-                <p className="text-sm text-slate-400 mt-1">
-                  Stock Management
-                </p>
-              </div>
-
-              <nav className="space-y-2">
-                {menus.map(([label, href]) => (
-                  <Link
-                    key={href}
-                    href={href}
-                    className="block rounded-xl px-4 py-3 text-slate-300 hover:bg-orange-500 hover:text-white"
-                  >
-                    {label}
-                  </Link>
-                ))}
-              </nav>
-            </aside>
+            <Sidebar />
 
             <main className="flex-1 p-8">
               <div className="mx-auto max-w-7xl">{children}</div>

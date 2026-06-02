@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import ProjectCloseButton from "../ProjectCloseButton";
+import ProjectDeleteButton from "../ProjectDeleteButton";
 
 export default async function ProjectsPage({
   searchParams,
@@ -117,6 +118,7 @@ export default async function ProjectsPage({
         <table className="w-full">
           <thead>
             <tr className="bg-slate-100 text-left text-sm text-slate-600">
+              <th className="p-4">ID</th>
               <th className="p-4">Project Code</th>
               <th className="p-4">Project Name</th>
               <th className="p-4">Client</th>
@@ -130,6 +132,8 @@ export default async function ProjectsPage({
             {projects && projects.length > 0 ? (
               projects.map((project) => (
                 <tr key={project.id} className="border-t border-slate-100">
+                  <td className="p-4 text-slate-500">{project.id}</td>
+
                   <td className="p-4 font-semibold text-slate-800">
                     {project.project_code}
                   </td>
@@ -169,20 +173,35 @@ export default async function ProjectsPage({
                         Edit
                       </Link>
 
-                      {project.status !== "CLOSED" ? (
-                        <ProjectCloseButton id={project.id} />
-                      ) : (
-                        <span className="px-3 py-2 text-sm text-slate-400">
-                          Closed
-                        </span>
-                      )}
+                      <Link
+                        href={`/projects/${project.id}/summary`}
+                        className="rounded-lg bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-700"
+                      >
+                        Summary
+                      </Link>
+
+
+{project.status !== "CLOSED" ? (
+  <>
+    <ProjectCloseButton id={project.id} />
+
+    <ProjectDeleteButton
+      id={project.id}
+      projectCode={project.project_code}
+    />
+  </>
+) : (
+  <span className="px-3 py-2 text-sm text-slate-400">
+    Closed
+  </span>
+)}
                     </div>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan={6} className="p-6 text-center text-slate-400">
+                <td colSpan={7} className="p-6 text-center text-slate-400">
                   No projects found
                 </td>
               </tr>
