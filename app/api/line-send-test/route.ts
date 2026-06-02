@@ -4,6 +4,13 @@ export async function GET() {
   const token = process.env.LINE_CHANNEL_ACCESS_TOKEN;
   const to = process.env.LINE_TO_ID;
 
+  if (!token || !to) {
+    return NextResponse.json({
+      success: false,
+      error: "Missing LINE env",
+    });
+  }
+
   const res = await fetch(
     "https://api.line.me/v2/bot/message/push",
     {
@@ -17,17 +24,17 @@ export async function GET() {
         messages: [
           {
             type: "text",
-            text: "🚀 BTECH Stock System Test Message",
+            text: "🚀 BTECH Stock Alert Test\n\nระบบส่ง LINE สำเร็จแล้ว",
           },
         ],
       }),
     }
   );
 
-  const text = await res.text();
+  const responseText = await res.text();
 
   return NextResponse.json({
     status: res.status,
-    response: text,
+    response: responseText,
   });
 }
