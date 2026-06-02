@@ -27,9 +27,9 @@ export default function Sidebar() {
     pathname.startsWith("/movements") ||
     pathname.startsWith("/project-usage");
 
-  const [stockOpen, setStockOpen] = useState(isStockPage);
-  const [managementOpen, setManagementOpen] = useState(isManagementPage);
-  const [reportsOpen, setReportsOpen] = useState(isReportsPage);
+const [stockOpen, setStockOpen] = useState(false);
+const [managementOpen, setManagementOpen] = useState(false);
+const [reportsOpen, setReportsOpen] = useState(false);
 
   function linkClass(href: string) {
     const active =
