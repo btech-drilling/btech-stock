@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { supabase } from "@/lib/supabase";
 
 export default function AddItemPage() {
   const [form, setForm] = useState({
@@ -14,7 +15,10 @@ export default function AddItemPage() {
     unit_cost: "",
   });
 
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState("");
   const [message, setMessage] = useState("");
+  const [saving, setSaving] = useState(false);
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -25,37 +29,90 @@ export default function AddItemPage() {
     });
   }
 
+  function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+
+    if (!file) return;
+
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
+  }
+
+  async function uploadImage() {
+    if (!imageFile) return "";
+
+    const fileExt = imageFile.name.split(".").pop();
+    const safeCode = form.item_code
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9-_]/g, "-");
+
+    const fileName = `${safeCode}-${Date.now()}.${fileExt}`;
+
+    const { error } = await supabase.storage
+      .from("item-images")
+      .upload(fileName, imageFile, {
+        cacheControl: "3600",
+        upsert: false,
+      });
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    const { data } = supabase.storage
+      .from("item-images")
+      .getPublicUrl(fileName);
+
+    return data.publicUrl;
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    const res = await fetch("/api/items/create", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ...form,
-        minimum_stock: Number(form.minimum_stock || 0),
-        unit_cost: Number(form.unit_cost || 0),
-      }),
-    });
+    try {
+      setSaving(true);
+      setMessage("");
 
-    const result = await res.json();
+      const imageUrl = await uploadImage();
 
-    if (result.success) {
-      setMessage("เพิ่ม Item สำเร็จ");
-
-      setForm({
-        item_code: "",
-        item_name: "",
-        item_type: "CONSUMABLE",
-        category: "",
-        unit: "",
-        minimum_stock: "",
-        unit_cost: "",
+      const res = await fetch("/api/items/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...form,
+          minimum_stock: Number(form.minimum_stock || 0),
+          unit_cost: Number(form.unit_cost || 0),
+          image_url: imageUrl,
+        }),
       });
-    } else {
-      setMessage("เกิดข้อผิดพลาด: " + result.error);
+
+      const result = await res.json();
+
+      if (result.success) {
+        setMessage("เพิ่ม Item สำเร็จ");
+
+        setForm({
+          item_code: "",
+          item_name: "",
+          item_type: "CONSUMABLE",
+          category: "",
+          unit: "",
+          minimum_stock: "",
+          unit_cost: "",
+        });
+
+        setImageFile(null);
+        setImagePreview("");
+      } else {
+        setMessage("เกิดข้อผิดพลาด: " + result.error);
+      }
+    } catch (error: any) {
+      setMessage("เกิดข้อผิดพลาด: " + error.message);
+    } finally {
+      setSaving(false);
     }
   }
 
@@ -77,6 +134,29 @@ export default function AddItemPage() {
 
       <div className="max-w-3xl rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
         <form onSubmit={handleSubmit} className="space-y-5">
+          <div>
+            <label className="mb-2 block text-sm font-semibold text-slate-700">
+              Item Image
+            </label>
+
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+            />
+
+            {imagePreview && (
+              <div className="mt-4">
+                <img
+                  src={imagePreview}
+                  alt="Item preview"
+                  className="h-32 w-32 rounded-xl border border-slate-200 object-cover"
+                />
+              </div>
+            )}
+          </div>
+
           <div>
             <label className="mb-2 block text-sm font-semibold text-slate-700">
               Item Code
@@ -198,9 +278,10 @@ export default function AddItemPage() {
           <div className="flex gap-4 pt-2">
             <button
               type="submit"
-              className="cursor-pointer rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white hover:bg-orange-600"
+              disabled={saving}
+              className="cursor-pointer rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white hover:bg-orange-600 disabled:cursor-not-allowed disabled:bg-slate-400"
             >
-              Save Item
+              {saving ? "Saving..." : "Save Item"}
             </button>
 
             <Link

@@ -7,10 +7,11 @@ import DeleteButton from "./DeleteButton";
 export default async function Home({
   searchParams,
 }: {
-  searchParams?: Promise<{ sort?: string }>;
+  searchParams?: Promise<{ sort?: string; q?: string }>;
 }) {
   const params = await searchParams;
   const sort = params?.sort ?? "code";
+  const q = params?.q?.trim().toLowerCase() ?? "";
 
   const { data: items, error: itemsError } = await supabase
     .from("items")
@@ -23,7 +24,8 @@ export default async function Home({
       unit,
       minimum_stock,
       current_stock,
-      unit_cost
+      unit_cost,
+      image_url
     `)
     .order("item_code", { ascending: true });
 
@@ -47,7 +49,25 @@ export default async function Home({
   const projectList = projects ?? [];
   const movementList = movements ?? [];
 
-  const sortedItemList = [...itemList].sort((a, b) => {
+  const filteredItemList =
+    q === ""
+      ? itemList
+      : itemList.filter((item) => {
+          const text = [
+            item.item_code,
+            item.item_name,
+            item.item_type,
+            item.category,
+            item.unit,
+          ]
+            .filter(Boolean)
+            .join(" ")
+            .toLowerCase();
+
+          return text.includes(q);
+        });
+
+  const sortedItemList = [...filteredItemList].sort((a, b) => {
     const stockValueA =
       Number(a.current_stock ?? 0) * Number(a.unit_cost ?? 0);
     const stockValueB =
@@ -236,6 +256,18 @@ export default async function Home({
     );
   }
 
+  function buildSortUrl(sortKey: string) {
+    const query = new URLSearchParams();
+
+    query.set("sort", sortKey);
+
+    if (q !== "") {
+      query.set("q", q);
+    }
+
+    return `/?${query.toString()}`;
+  }
+
   function sortLinkClass(sortKey: string) {
     return sort === sortKey
       ? "rounded-lg bg-orange-500 px-3 py-2 text-sm font-semibold text-white"
@@ -367,11 +399,27 @@ export default async function Home({
             {lowStockList.map((item) => (
               <div key={item.id} className="rounded-xl bg-white p-4 shadow-sm">
                 <div className="flex items-center justify-between gap-4">
-                  <div>
-                    <p className="font-semibold text-slate-800">
-                      {item.item_code}
-                    </p>
-                    <p className="text-sm text-slate-500">{item.item_name}</p>
+                  <div className="flex items-center gap-3">
+                    {item.image_url ? (
+                      <img
+                        src={item.image_url}
+                        alt={item.item_name ?? item.item_code}
+                        className="h-12 w-12 rounded-lg border border-slate-200 object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-dashed border-slate-300 bg-slate-50 text-xs text-slate-400">
+                        N/A
+                      </div>
+                    )}
+
+                    <div>
+                      <p className="font-semibold text-slate-800">
+                        {item.item_code}
+                      </p>
+                      <p className="text-sm text-slate-500">
+                        {item.item_name}
+                      </p>
+                    </div>
                   </div>
 
                   <div className="text-right">
@@ -430,41 +478,80 @@ export default async function Home({
       </div>
 
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-        <div className="flex items-center justify-between gap-4 border-b border-slate-200 p-5">
-          <h2 className="text-xl font-bold text-slate-900">Items Master</h2>
+        <div className="space-y-4 border-b border-slate-200 p-5">
+          <div className="flex items-center justify-between gap-4">
+            <h2 className="text-xl font-bold text-slate-900">Items Master</h2>
 
-          <div className="flex flex-wrap gap-2">
-            <Link href="/?sort=code" className={sortLinkClass("code")}>
-              Item Code
-            </Link>
+            <div className="flex flex-wrap gap-2">
+              <Link href={buildSortUrl("code")} className={sortLinkClass("code")}>
+                Item Code
+              </Link>
 
-            <Link
-              href="/?sort=current_stock"
-              className={sortLinkClass("current_stock")}
-            >
-              Current Stock
-            </Link>
+              <Link
+                href={buildSortUrl("current_stock")}
+                className={sortLinkClass("current_stock")}
+              >
+                Current Stock
+              </Link>
 
-            <Link
-              href="/?sort=stock_value"
-              className={sortLinkClass("stock_value")}
-            >
-              Stock Value
-            </Link>
+              <Link
+                href={buildSortUrl("stock_value")}
+                className={sortLinkClass("stock_value")}
+              >
+                Stock Value
+              </Link>
 
-            <Link href="/?sort=low_stock" className={sortLinkClass("low_stock")}>
-              Low Stock First
-            </Link>
+              <Link
+                href={buildSortUrl("low_stock")}
+                className={sortLinkClass("low_stock")}
+              >
+                Low Stock First
+              </Link>
 
-            <Link href="/?sort=item_type" className={sortLinkClass("item_type")}>
-              Item Type
-            </Link>
+              <Link
+                href={buildSortUrl("item_type")}
+                className={sortLinkClass("item_type")}
+              >
+                Item Type
+              </Link>
+            </div>
           </div>
+
+          <form action="/" className="flex flex-col gap-3 md:flex-row">
+            <input type="hidden" name="sort" value={sort} />
+
+            <input
+              key={q}
+              name="q"
+              defaultValue={q}
+              placeholder="Search item code, name, type, category, unit..."
+              className="flex-1 rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none focus:border-orange-500"
+            />
+
+            <button
+              type="submit"
+              className="rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white hover:bg-orange-600"
+            >
+              Search
+            </button>
+
+            <Link
+              href={`/?sort=${sort}`}
+              className="rounded-xl border border-slate-300 bg-white px-6 py-3 text-center font-semibold text-slate-700 hover:bg-slate-100"
+            >
+              Clear
+            </Link>
+          </form>
+
+          <p className="text-sm text-slate-500">
+            Showing {sortedItemList.length} of {itemList.length} item(s)
+          </p>
         </div>
 
         <table className="w-full">
           <thead>
             <tr className="bg-slate-100 text-left text-sm text-slate-600">
+              <th className="p-4">Image</th>
               <th className="p-4">Code</th>
               <th className="p-4">Item Name</th>
               <th className="p-4">Type</th>
@@ -492,7 +579,21 @@ export default async function Home({
 
               return (
                 <tr key={item.id} className="border-t border-slate-100">
-                  <td className="p-4 font-semibold text-slate-800">
+                  <td className="p-4">
+                    {item.image_url ? (
+                      <img
+                        src={item.image_url}
+                        alt={item.item_name ?? item.item_code}
+                        className="h-14 w-14 rounded-xl border border-slate-200 object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-dashed border-slate-300 bg-slate-50 text-xs text-slate-400">
+                        No image
+                      </div>
+                    )}
+                  </td>
+
+                  <td className="p-4 font-semibold text-slate-800 whitespace-nowrap">
                     {item.item_code}
                   </td>
 
@@ -559,7 +660,7 @@ export default async function Home({
 
             {sortedItemList.length === 0 && (
               <tr>
-                <td colSpan={10} className="p-6 text-center text-slate-400">
+                <td colSpan={11} className="p-6 text-center text-slate-400">
                   No items found
                 </td>
               </tr>

@@ -41,6 +41,12 @@ export default async function ItemStockCardPage({
     return <div>Error: {movementError.message}</div>;
   }
 
+  const currentStock = Number(item.current_stock ?? 0);
+  const minimumStock = Number(item.minimum_stock ?? 0);
+  const unitCost = Number(item.unit_cost ?? 0);
+  const stockValue = currentStock * unitCost;
+  const isLowStock = currentStock <= minimumStock;
+
   const totalIn =
     movements
       ?.filter((m: any) => m.movement_type === "IN")
@@ -73,54 +79,17 @@ export default async function ItemStockCardPage({
   const netMovement =
     totalIn - totalOut + totalReturn - totalScrap + totalAdjust;
 
-  const projectUsageMap = new Map<string, any>();
-
-  movements?.forEach((m: any) => {
-    if (!m.projects) return;
-
-    const projectCode = m.projects.project_code;
-    const key = projectCode;
-    const qty = Math.abs(Number(m.quantity ?? 0));
-
-    if (!projectUsageMap.has(key)) {
-      projectUsageMap.set(key, {
-        project_code: m.projects.project_code,
-        project_name: m.projects.project_name,
-        out: 0,
-        returnQty: 0,
-        scrap: 0,
-        net_used: 0,
-      });
-    }
-
-    const row = projectUsageMap.get(key);
-
-    if (m.movement_type === "OUT") row.out += qty;
-    if (m.movement_type === "RETURN") row.returnQty += qty;
-    if (m.movement_type === "SCRAP") row.scrap += qty;
-
-    row.net_used = row.out - row.returnQty - row.scrap;
-  });
-
-  const projectUsage = Array.from(projectUsageMap.values())
-    .filter((row) => row.out > 0 || row.returnQty > 0 || row.scrap > 0)
-    .sort((a, b) => b.net_used - a.net_used);
-
   function movementTypeBadgeClass(value: string) {
     if (value === "IN") {
       return "rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700";
     }
 
-    if (value === "OUT") {
+    if (value === "OUT" || value === "SCRAP") {
       return "rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700";
     }
 
     if (value === "RETURN") {
       return "rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700";
-    }
-
-    if (value === "SCRAP") {
-      return "rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700";
     }
 
     if (value === "ADJUST") {
@@ -153,16 +122,6 @@ export default async function ItemStockCardPage({
           </h1>
 
           <p className="mt-1 text-slate-500">{item.item_name}</p>
-
-          <div className="mt-3 flex gap-2">
-            <span className={itemTypeBadgeClass(item.item_type)}>
-              {item.item_type}
-            </span>
-
-            <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
-              Unit: {item.unit}
-            </span>
-          </div>
         </div>
 
         <Link
@@ -173,37 +132,108 @@ export default async function ItemStockCardPage({
         </Link>
       </div>
 
-      <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-4">
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-sm text-slate-500">Current Stock</p>
-          <p className="mt-2 text-3xl font-bold text-slate-900">
-            {item.current_stock}
-          </p>
+      <div className="mb-6 grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          {item.image_url ? (
+            <img
+              src={item.image_url}
+              alt={item.item_name ?? item.item_code}
+              className="h-72 w-full rounded-2xl border border-slate-200 object-cover"
+            />
+          ) : (
+            <div className="flex h-72 w-full items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-50 text-slate-400">
+              No image
+            </div>
+          )}
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-sm text-slate-500">Minimum Stock</p>
-          <p className="mt-2 text-3xl font-bold text-orange-600">
-            {item.minimum_stock}
-          </p>
-        </div>
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm lg:col-span-2">
+          <div className="mb-5 flex flex-wrap gap-2">
+            <span className={itemTypeBadgeClass(item.item_type)}>
+              {item.item_type}
+            </span>
 
+            <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
+              Unit: {item.unit}
+            </span>
+
+            {isLowStock && (
+              <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
+                LOW STOCK
+              </span>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div>
+              <p className="text-sm text-slate-500">Item Code</p>
+              <p className="mt-1 font-bold text-slate-900">{item.item_code}</p>
+            </div>
+
+            <div>
+              <p className="text-sm text-slate-500">Item Name</p>
+              <p className="mt-1 font-bold text-slate-900">{item.item_name}</p>
+            </div>
+
+            <div>
+              <p className="text-sm text-slate-500">Category</p>
+              <p className="mt-1 font-bold text-slate-900">
+                {item.category || "-"}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-sm text-slate-500">Unit Cost</p>
+              <p className="mt-1 font-bold text-blue-600">
+                ฿{unitCost.toLocaleString()}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-sm text-slate-500">Current Stock</p>
+              <p
+                className={
+                  isLowStock
+                    ? "mt-1 text-3xl font-bold text-red-600"
+                    : "mt-1 text-3xl font-bold text-green-700"
+                }
+              >
+                {currentStock}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-sm text-slate-500">Minimum Stock</p>
+              <p className="mt-1 text-3xl font-bold text-orange-600">
+                {minimumStock}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-sm text-slate-500">Stock Value</p>
+              <p className="mt-1 text-3xl font-bold text-blue-700">
+                ฿{stockValue.toLocaleString()}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-sm text-slate-500">Total Movement</p>
+              <p className="mt-1 text-3xl font-bold text-slate-900">
+                {movements?.length ?? 0}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-6">
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-sm text-slate-500">Net Movement</p>
-          <p className="mt-2 text-3xl font-bold text-slate-900">
+          <p className="text-sm text-slate-500">Net</p>
+          <p className="mt-2 text-2xl font-bold text-slate-900">
             {netMovement}
           </p>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-sm text-slate-500">Total Movement</p>
-          <p className="mt-2 text-3xl font-bold text-slate-900">
-            {movements?.length ?? 0}
-          </p>
-        </div>
-      </div>
-
-      <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-5">
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <p className="text-sm text-slate-500">IN</p>
           <p className="mt-2 text-2xl font-bold text-green-700">{totalIn}</p>
@@ -232,75 +262,6 @@ export default async function ItemStockCardPage({
             {totalAdjust}
           </p>
         </div>
-      </div>
-
-      <div className="mb-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-        <div className="flex items-center justify-between border-b border-slate-200 p-5">
-          <h2 className="text-xl font-bold text-slate-900">
-            Project Usage Summary
-          </h2>
-
-          <span className="text-sm text-slate-500">
-            {projectUsage.length} project(s)
-          </span>
-        </div>
-
-        <table className="w-full">
-          <thead>
-            <tr className="bg-slate-100 text-left text-sm text-slate-600">
-              <th className="p-4">Project</th>
-              <th className="p-4 text-right">OUT</th>
-              <th className="p-4 text-right">RETURN</th>
-              <th className="p-4 text-right">SCRAP</th>
-              <th className="p-4 text-right">NET USED</th>
-              <th className="p-4">Unit</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {projectUsage.length > 0 ? (
-              projectUsage.map((row) => (
-                <tr
-                  key={row.project_code}
-                  className="border-t border-slate-100"
-                >
-                  <td className="p-4">
-                    <div className="font-semibold text-slate-800">
-                      {row.project_code}
-                    </div>
-                    <div className="text-sm text-slate-500">
-                      {row.project_name}
-                    </div>
-                  </td>
-
-                  <td className="p-4 text-right font-semibold text-red-600">
-                    {row.out}
-                  </td>
-
-                  <td className="p-4 text-right font-semibold text-blue-600">
-                    {row.returnQty}
-                  </td>
-
-                  <td className="p-4 text-right font-semibold text-red-700">
-                    {row.scrap}
-                  </td>
-
-                  <td className="p-4 text-right font-bold text-slate-900">
-                    {row.net_used}
-                  </td>
-
-                  <td className="p-4 text-slate-600">{item.unit}</td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={6} className="p-6 text-center text-slate-400">
-                  No project usage found for this item
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
       </div>
 
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">

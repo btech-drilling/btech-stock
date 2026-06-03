@@ -6,7 +6,17 @@ import Link from "next/link";
 export default async function LowStockPage() {
   const { data: items, error } = await supabase
     .from("items")
-    .select("*")
+    .select(`
+      id,
+      item_code,
+      item_name,
+      item_type,
+      category,
+      unit,
+      minimum_stock,
+      current_stock,
+      image_url
+    `)
     .order("item_code", { ascending: true });
 
   if (error) {
@@ -58,6 +68,7 @@ export default async function LowStockPage() {
         <table className="w-full">
           <thead>
             <tr className="bg-slate-100 text-left text-sm text-slate-600">
+              <th className="p-4">Image</th>
               <th className="p-4">Code</th>
               <th className="p-4">Item Name</th>
               <th className="p-4">Type</th>
@@ -78,6 +89,20 @@ export default async function LowStockPage() {
 
               return (
                 <tr key={item.id} className="border-t border-slate-100">
+                  <td className="p-4">
+                    {item.image_url ? (
+                      <img
+                        src={item.image_url}
+                        alt={item.item_name ?? item.item_code}
+                        className="h-14 w-14 rounded-xl border border-slate-200 object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-dashed border-slate-300 bg-slate-50 text-xs text-slate-400">
+                        No image
+                      </div>
+                    )}
+                  </td>
+
                   <td className="p-4 font-semibold text-slate-800">
                     {item.item_code}
                   </td>
@@ -111,12 +136,21 @@ export default async function LowStockPage() {
                   </td>
 
                   <td className="p-4">
-                    <Link
-                      href={`/edit-item/${item.id}`}
-                      className="font-semibold text-orange-600 hover:underline"
-                    >
-                      Edit
-                    </Link>
+                    <div className="flex gap-3">
+                      <Link
+                        href={`/items/${item.id}/card`}
+                        className="font-semibold text-blue-600 hover:underline"
+                      >
+                        Card
+                      </Link>
+
+                      <Link
+                        href={`/edit-item/${item.id}`}
+                        className="font-semibold text-orange-600 hover:underline"
+                      >
+                        Edit
+                      </Link>
+                    </div>
                   </td>
                 </tr>
               );
@@ -124,7 +158,7 @@ export default async function LowStockPage() {
 
             {lowStockItems.length === 0 && (
               <tr>
-                <td colSpan={9} className="p-6 text-center text-slate-400">
+                <td colSpan={10} className="p-6 text-center text-slate-400">
                   No low stock items
                 </td>
               </tr>

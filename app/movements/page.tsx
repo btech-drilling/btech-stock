@@ -26,7 +26,8 @@ export default async function MovementsPage({
         item_code,
         item_name,
         item_type,
-        unit
+        unit,
+        image_url
       ),
       projects (
         project_code,
@@ -163,62 +164,62 @@ export default async function MovementsPage({
       </div>
 
       <form
-  action="/movements"
-  className="mb-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
->
-  <input type="hidden" name="type" value={type} />
-
-  <div className="space-y-4">
-    <div>
-      <label className="mb-2 block text-sm font-semibold text-slate-600">
-        Project
-      </label>
-
-      <select
-        name="project"
-        defaultValue={project}
-        className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none focus:border-orange-500"
+        action="/movements"
+        className="mb-5 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
       >
-        <option value="ALL">All Projects</option>
+        <input type="hidden" name="type" value={type} />
 
-        {(projects ?? []).map((p: any) => (
-          <option key={p.id} value={p.id}>
-            {p.project_code}
-          </option>
-        ))}
-      </select>
-    </div>
+        <div className="space-y-4">
+          <div>
+            <label className="mb-2 block text-sm font-semibold text-slate-600">
+              Project
+            </label>
 
-    <div>
-      <label className="mb-2 block text-sm font-semibold text-slate-600">
-        Keyword
-      </label>
+            <select
+              name="project"
+              defaultValue={project}
+              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none focus:border-orange-500"
+            >
+              <option value="ALL">All Projects</option>
 
-      <input
-        name="q"
-        defaultValue={q}
-        placeholder="Search item, project, remark, type..."
-        className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none focus:border-orange-500"
-      />
-    </div>
+              {(projects ?? []).map((p: any) => (
+                <option key={p.id} value={p.id}>
+                  {p.project_code}
+                </option>
+              ))}
+            </select>
+          </div>
 
-    <div className="flex gap-3">
-      <button
-        type="submit"
-        className="rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white hover:bg-orange-600"
-      >
-        Filter
-      </button>
+          <div>
+            <label className="mb-2 block text-sm font-semibold text-slate-600">
+              Keyword
+            </label>
 
-      <Link
-        href="/movements"
-        className="rounded-xl border border-slate-300 bg-white px-6 py-3 font-semibold text-slate-700 hover:bg-slate-100"
-      >
-        Clear
-      </Link>
-    </div>
-  </div>
-</form>
+            <input
+              name="q"
+              defaultValue={q}
+              placeholder="Search item, project, remark, type..."
+              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none focus:border-orange-500"
+            />
+          </div>
+
+          <div className="flex gap-3">
+            <button
+              type="submit"
+              className="rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white hover:bg-orange-600"
+            >
+              Filter
+            </button>
+
+            <Link
+              href="/movements"
+              className="rounded-xl border border-slate-300 bg-white px-6 py-3 font-semibold text-slate-700 hover:bg-slate-100"
+            >
+              Clear
+            </Link>
+          </div>
+        </div>
+      </form>
 
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div className="flex items-center justify-between border-b border-slate-200 p-5">
@@ -265,18 +266,34 @@ export default async function MovementsPage({
                     </td>
 
                     <td className="p-4">
-                      <div className="mb-1 flex items-center gap-2">
-                        <span className="font-semibold text-slate-800">
-                          {m.items?.item_code}
-                        </span>
+                      <div className="flex items-center gap-3">
+                        {m.items?.image_url ? (
+                          <img
+                            src={m.items.image_url}
+                            alt={m.items?.item_name ?? m.items?.item_code}
+                            className="h-12 w-12 rounded-lg border border-slate-200 object-cover"
+                          />
+                        ) : (
+                          <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-dashed border-slate-300 bg-slate-50 text-xs text-slate-400">
+                            N/A
+                          </div>
+                        )}
 
-                        <span className={itemTypeBadgeClass(itemType)}>
-                          {itemType}
-                        </span>
-                      </div>
+                        <div>
+                          <div className="mb-1 flex items-center gap-2">
+                            <span className="font-semibold text-slate-800">
+                              {m.items?.item_code}
+                            </span>
 
-                      <div className="text-sm text-slate-500">
-                        {m.items?.item_name}
+                            <span className={itemTypeBadgeClass(itemType)}>
+                              {itemType}
+                            </span>
+                          </div>
+
+                          <div className="text-sm text-slate-500">
+                            {m.items?.item_name}
+                          </div>
+                        </div>
                       </div>
                     </td>
 

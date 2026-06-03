@@ -13,6 +13,7 @@ export async function POST(req: Request) {
     unit,
     minimum_stock,
     unit_cost,
+    image_url,
   } = body;
 
   const validTypes = ["CONSUMABLE", "TOOL", "ASSET"];
@@ -31,6 +32,7 @@ export async function POST(req: Request) {
       unit,
       minimum_stock: Number(minimum_stock ?? 0),
       unit_cost: Number(unit_cost ?? 0),
+      image_url,
     })
     .eq("id", id);
 
