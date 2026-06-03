@@ -271,7 +271,7 @@ export default async function MovementsPage({
                           <img
                             src={m.items.image_url}
                             alt={m.items?.item_name ?? m.items?.item_code}
-                            className="h-12 w-12 rounded-lg border border-slate-200 object-cover"
+                            className="h-12 w-12 rounded-lg border border-slate-200 object-contain bg-slate-50 p-1"
                           />
                         ) : (
                           <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-dashed border-slate-300 bg-slate-50 text-xs text-slate-400">

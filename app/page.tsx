@@ -404,7 +404,7 @@ export default async function Home({
                       <img
                         src={item.image_url}
                         alt={item.item_name ?? item.item_code}
-                        className="h-12 w-12 rounded-lg border border-slate-200 object-cover"
+                        className="h-12 w-12 rounded-lg border border-slate-200 object-contain bg-slate-50 p-1"
                       />
                     ) : (
                       <div className="flex h-12 w-12 items-center justify-center rounded-lg border border-dashed border-slate-300 bg-slate-50 text-xs text-slate-400">
@@ -584,7 +584,7 @@ export default async function Home({
                       <img
                         src={item.image_url}
                         alt={item.item_name ?? item.item_code}
-                        className="h-14 w-14 rounded-xl border border-slate-200 object-cover"
+                        className="h-14 w-14 rounded-xl border border-slate-200 object-contain bg-slate-50 p-1"
                       />
                     ) : (
                       <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-dashed border-slate-300 bg-slate-50 text-xs text-slate-400">

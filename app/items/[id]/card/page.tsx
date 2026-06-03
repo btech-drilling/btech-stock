@@ -138,7 +138,7 @@ export default async function ItemStockCardPage({
             <img
               src={item.image_url}
               alt={item.item_name ?? item.item_code}
-              className="h-72 w-full rounded-2xl border border-slate-200 object-cover"
+              className="h-72 w-full rounded-2xl border border-slate-200 object-contain bg-slate-50 p-2"
             />
           ) : (
             <div className="flex h-72 w-full items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-50 text-slate-400">
