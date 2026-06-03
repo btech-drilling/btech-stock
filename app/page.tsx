@@ -7,10 +7,20 @@ import DeleteButton from "./DeleteButton";
 export default async function Home() {
   const { data: items, error: itemsError } = await supabase
     .from("items")
-    .select("*")
+    .select(`
+      id,
+      item_code,
+      item_name,
+      item_type,
+      category,
+      unit,
+      minimum_stock,
+      current_stock,
+      unit_cost
+    `)
     .order("item_code", { ascending: true });
 
-  const { data: projects } = await supabase.from("projects").select("*");
+  const { data: projects } = await supabase.from("projects").select("id");
 
   const { data: movements } = await supabase
     .from("stock_movements")
@@ -19,7 +29,8 @@ export default async function Home() {
       quantity,
       project:projects(project_code, project_name),
       item:items(item_code, item_type, unit_cost)
-    `);
+    `)
+    .not("project_id", "is", null);
 
   if (itemsError) {
     return <div>Error: {itemsError.message}</div>;
