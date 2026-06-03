@@ -1,29 +1,23 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const router = useRouter();
 
   const [stockOpen, setStockOpen] = useState(false);
   const [managementOpen, setManagementOpen] = useState(false);
   const [reportsOpen, setReportsOpen] = useState(false);
-
-  function go(href: string) {
-    if (pathname !== href) {
-      router.push(href);
-    }
-  }
 
   function linkClass(href: string) {
     const active =
       pathname === href || (href !== "/" && pathname.startsWith(href));
 
     return active
-      ? "w-full rounded-lg bg-orange-500 px-4 py-2 text-left font-semibold text-white"
-      : "w-full rounded-lg px-4 py-2 text-left text-slate-400 hover:bg-orange-500 hover:text-white";
+      ? "block rounded-lg bg-orange-500 px-4 py-2 font-semibold text-white"
+      : "block rounded-lg px-4 py-2 text-slate-400 hover:bg-orange-500 hover:text-white";
   }
 
   function groupButtonClass() {
@@ -38,9 +32,9 @@ export default function Sidebar() {
       </div>
 
       <nav className="space-y-2">
-        <button onClick={() => go("/")} className={linkClass("/")}>
+        <Link href="/" prefetch={false} className={linkClass("/")}>
           Dashboard
-        </button>
+        </Link>
 
         <button
           onClick={() => setStockOpen(!stockOpen)}
@@ -51,25 +45,45 @@ export default function Sidebar() {
 
         {stockOpen && (
           <div className="ml-5 space-y-1 border-l border-slate-700 pl-4">
-            <button onClick={() => go("/stock-in")} className={linkClass("/stock-in")}>
+            <Link
+              href="/stock-in"
+              prefetch={false}
+              className={linkClass("/stock-in")}
+            >
               Stock In
-            </button>
+            </Link>
 
-            <button onClick={() => go("/stock-out")} className={linkClass("/stock-out")}>
+            <Link
+              href="/stock-out"
+              prefetch={false}
+              className={linkClass("/stock-out")}
+            >
               Stock Out
-            </button>
+            </Link>
 
-            <button onClick={() => go("/stock-return")} className={linkClass("/stock-return")}>
+            <Link
+              href="/stock-return"
+              prefetch={false}
+              className={linkClass("/stock-return")}
+            >
               Stock Return
-            </button>
+            </Link>
 
-            <button onClick={() => go("/stock-scrap")} className={linkClass("/stock-scrap")}>
+            <Link
+              href="/stock-scrap"
+              prefetch={false}
+              className={linkClass("/stock-scrap")}
+            >
               Stock Scrap
-            </button>
+            </Link>
 
-            <button onClick={() => go("/stock-adjust")} className={linkClass("/stock-adjust")}>
+            <Link
+              href="/stock-adjust"
+              prefetch={false}
+              className={linkClass("/stock-adjust")}
+            >
               Stock Adjust
-            </button>
+            </Link>
           </div>
         )}
 
@@ -82,17 +96,29 @@ export default function Sidebar() {
 
         {managementOpen && (
           <div className="ml-5 space-y-1 border-l border-slate-700 pl-4">
-            <button onClick={() => go("/projects")} className={linkClass("/projects")}>
+            <Link
+              href="/projects"
+              prefetch={false}
+              className={linkClass("/projects")}
+            >
               Projects
-            </button>
+            </Link>
 
-            <button onClick={() => go("/add-project")} className={linkClass("/add-project")}>
+            <Link
+              href="/add-project"
+              prefetch={false}
+              className={linkClass("/add-project")}
+            >
               Add Project
-            </button>
+            </Link>
 
-            <button onClick={() => go("/add-item")} className={linkClass("/add-item")}>
+            <Link
+              href="/add-item"
+              prefetch={false}
+              className={linkClass("/add-item")}
+            >
               Add Item
-            </button>
+            </Link>
           </div>
         )}
 
@@ -105,13 +131,29 @@ export default function Sidebar() {
 
         {reportsOpen && (
           <div className="ml-5 space-y-1 border-l border-slate-700 pl-4">
-            <button onClick={() => go("/movements")} className={linkClass("/movements")}>
+            <Link
+              href="/movements"
+              prefetch={false}
+              className={linkClass("/movements")}
+            >
               Movements
-            </button>
+            </Link>
 
-            <button onClick={() => go("/project-usage")} className={linkClass("/project-usage")}>
+            <Link
+              href="/project-usage"
+              prefetch={false}
+              className={linkClass("/project-usage")}
+            >
               Project Summary
-            </button>
+            </Link>
+
+            <Link
+              href="/low-stock"
+              prefetch={false}
+              className={linkClass("/low-stock")}
+            >
+              Low Stock
+            </Link>
           </div>
         )}
       </nav>
