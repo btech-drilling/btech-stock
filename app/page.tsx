@@ -4,7 +4,14 @@ import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import DeleteButton from "./DeleteButton";
 
-export default async function Home() {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams?: Promise<{ sort?: string }>;
+}) {
+  const params = await searchParams;
+  const sort = params?.sort ?? "code";
+
   const { data: items, error: itemsError } = await supabase
     .from("items")
     .select(`
@@ -39,6 +46,41 @@ export default async function Home() {
   const itemList = items ?? [];
   const projectList = projects ?? [];
   const movementList = movements ?? [];
+
+  const sortedItemList = [...itemList].sort((a, b) => {
+    const stockValueA =
+      Number(a.current_stock ?? 0) * Number(a.unit_cost ?? 0);
+    const stockValueB =
+      Number(b.current_stock ?? 0) * Number(b.unit_cost ?? 0);
+
+    const isLowA =
+      Number(a.current_stock ?? 0) <= Number(a.minimum_stock ?? 0);
+    const isLowB =
+      Number(b.current_stock ?? 0) <= Number(b.minimum_stock ?? 0);
+
+    if (sort === "current_stock") {
+      return Number(a.current_stock ?? 0) - Number(b.current_stock ?? 0);
+    }
+
+    if (sort === "stock_value") {
+      return stockValueB - stockValueA;
+    }
+
+    if (sort === "low_stock") {
+      if (isLowA && !isLowB) return -1;
+      if (!isLowA && isLowB) return 1;
+
+      return Number(a.current_stock ?? 0) - Number(b.current_stock ?? 0);
+    }
+
+    if (sort === "item_type") {
+      return String(a.item_type ?? "CONSUMABLE").localeCompare(
+        String(b.item_type ?? "CONSUMABLE")
+      );
+    }
+
+    return String(a.item_code ?? "").localeCompare(String(b.item_code ?? ""));
+  });
 
   const allLowStockList = itemList
     .filter(
@@ -192,6 +234,12 @@ export default async function Home() {
         CONSUMABLE
       </span>
     );
+  }
+
+  function sortLinkClass(sortKey: string) {
+    return sort === sortKey
+      ? "rounded-lg bg-orange-500 px-3 py-2 text-sm font-semibold text-white"
+      : "rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100";
   }
 
   return (
@@ -382,8 +430,36 @@ export default async function Home() {
       </div>
 
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-        <div className="border-b border-slate-200 p-5">
+        <div className="flex items-center justify-between gap-4 border-b border-slate-200 p-5">
           <h2 className="text-xl font-bold text-slate-900">Items Master</h2>
+
+          <div className="flex flex-wrap gap-2">
+            <Link href="/?sort=code" className={sortLinkClass("code")}>
+              Item Code
+            </Link>
+
+            <Link
+              href="/?sort=current_stock"
+              className={sortLinkClass("current_stock")}
+            >
+              Current Stock
+            </Link>
+
+            <Link
+              href="/?sort=stock_value"
+              className={sortLinkClass("stock_value")}
+            >
+              Stock Value
+            </Link>
+
+            <Link href="/?sort=low_stock" className={sortLinkClass("low_stock")}>
+              Low Stock First
+            </Link>
+
+            <Link href="/?sort=item_type" className={sortLinkClass("item_type")}>
+              Item Type
+            </Link>
+          </div>
         </div>
 
         <table className="w-full">
@@ -403,7 +479,7 @@ export default async function Home() {
           </thead>
 
           <tbody>
-            {itemList.map((item) => {
+            {sortedItemList.map((item) => {
               const isLowStock =
                 Number(item.current_stock ?? 0) <=
                 Number(item.minimum_stock ?? 0);
@@ -481,7 +557,7 @@ export default async function Home() {
               );
             })}
 
-            {itemList.length === 0 && (
+            {sortedItemList.length === 0 && (
               <tr>
                 <td colSpan={10} className="p-6 text-center text-slate-400">
                   No items found
