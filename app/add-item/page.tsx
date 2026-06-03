@@ -11,6 +11,7 @@ export default function AddItemPage() {
     category: "",
     unit: "",
     minimum_stock: "",
+    unit_cost: "",
   });
 
   const [message, setMessage] = useState("");
@@ -34,7 +35,8 @@ export default function AddItemPage() {
       },
       body: JSON.stringify({
         ...form,
-        minimum_stock: Number(form.minimum_stock),
+        minimum_stock: Number(form.minimum_stock || 0),
+        unit_cost: Number(form.unit_cost || 0),
       }),
     });
 
@@ -50,6 +52,7 @@ export default function AddItemPage() {
         category: "",
         unit: "",
         minimum_stock: "",
+        unit_cost: "",
       });
     } else {
       setMessage("เกิดข้อผิดพลาด: " + result.error);
@@ -74,7 +77,6 @@ export default function AddItemPage() {
 
       <div className="max-w-3xl rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
         <form onSubmit={handleSubmit} className="space-y-5">
-
           <div>
             <label className="mb-2 block text-sm font-semibold text-slate-700">
               Item Code
@@ -161,19 +163,36 @@ export default function AddItemPage() {
             </div>
           </div>
 
-          <div>
-            <label className="mb-2 block text-sm font-semibold text-slate-700">
-              Minimum Stock
-            </label>
+          <div className="grid grid-cols-2 gap-5">
+            <div>
+              <label className="mb-2 block text-sm font-semibold text-slate-700">
+                Minimum Stock
+              </label>
 
-            <input
-              name="minimum_stock"
-              type="number"
-              value={form.minimum_stock}
-              onChange={handleChange}
-              placeholder="จำนวนขั้นต่ำ"
-              className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
-            />
+              <input
+                name="minimum_stock"
+                type="number"
+                value={form.minimum_stock}
+                onChange={handleChange}
+                placeholder="จำนวนขั้นต่ำ"
+                className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+              />
+            </div>
+
+            <div>
+              <label className="mb-2 block text-sm font-semibold text-slate-700">
+                Unit Cost (฿)
+              </label>
+
+              <input
+                name="unit_cost"
+                type="number"
+                value={form.unit_cost}
+                onChange={handleChange}
+                placeholder="ราคาทุนต่อหน่วย"
+                className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+              />
+            </div>
           </div>
 
           <div className="flex gap-4 pt-2">

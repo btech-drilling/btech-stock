@@ -12,6 +12,7 @@ export async function POST(req: Request) {
     category,
     unit,
     minimum_stock,
+    unit_cost,
   } = body;
 
   const validTypes = ["CONSUMABLE", "TOOL", "ASSET"];
@@ -28,7 +29,8 @@ export async function POST(req: Request) {
       item_type: finalItemType,
       category,
       unit,
-      minimum_stock,
+      minimum_stock: Number(minimum_stock ?? 0),
+      unit_cost: Number(unit_cost ?? 0),
     })
     .eq("id", id);
 

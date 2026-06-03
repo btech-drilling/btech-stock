@@ -1,44 +1,29 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
 
-  const isStockPage =
-    pathname.startsWith("/stock-in") ||
-    pathname.startsWith("/stock-out") ||
-    pathname.startsWith("/stock-return") ||
-    pathname.startsWith("/stock-scrap") ||
-    pathname.startsWith("/stock-adjust");
+  const [stockOpen, setStockOpen] = useState(false);
+  const [managementOpen, setManagementOpen] = useState(false);
+  const [reportsOpen, setReportsOpen] = useState(false);
 
-  const isManagementPage =
-    pathname === "/" ||
-    pathname.startsWith("/add-item") ||
-    pathname.startsWith("/edit-item") ||
-    pathname.startsWith("/items") ||
-    pathname.startsWith("/projects") ||
-    pathname.startsWith("/add-project") ||
-    pathname.startsWith("/edit-project");
-
-  const isReportsPage =
-    pathname.startsWith("/movements") ||
-    pathname.startsWith("/project-usage");
-
-const [stockOpen, setStockOpen] = useState(false);
-const [managementOpen, setManagementOpen] = useState(false);
-const [reportsOpen, setReportsOpen] = useState(false);
+  function go(href: string) {
+    if (pathname !== href) {
+      router.push(href);
+    }
+  }
 
   function linkClass(href: string) {
     const active =
-      pathname === href ||
-      (href !== "/" && pathname.startsWith(href));
+      pathname === href || (href !== "/" && pathname.startsWith(href));
 
     return active
-      ? "block rounded-lg bg-orange-500 px-4 py-2 font-semibold text-white"
-      : "block rounded-lg px-4 py-2 text-slate-400 hover:bg-orange-500 hover:text-white";
+      ? "w-full rounded-lg bg-orange-500 px-4 py-2 text-left font-semibold text-white"
+      : "w-full rounded-lg px-4 py-2 text-left text-slate-400 hover:bg-orange-500 hover:text-white";
   }
 
   function groupButtonClass() {
@@ -53,9 +38,9 @@ const [reportsOpen, setReportsOpen] = useState(false);
       </div>
 
       <nav className="space-y-2">
-        <Link href="/" className={linkClass("/")}>
+        <button onClick={() => go("/")} className={linkClass("/")}>
           Dashboard
-        </Link>
+        </button>
 
         <button
           onClick={() => setStockOpen(!stockOpen)}
@@ -66,25 +51,25 @@ const [reportsOpen, setReportsOpen] = useState(false);
 
         {stockOpen && (
           <div className="ml-5 space-y-1 border-l border-slate-700 pl-4">
-            <Link href="/stock-in" className={linkClass("/stock-in")}>
+            <button onClick={() => go("/stock-in")} className={linkClass("/stock-in")}>
               Stock In
-            </Link>
+            </button>
 
-            <Link href="/stock-out" className={linkClass("/stock-out")}>
+            <button onClick={() => go("/stock-out")} className={linkClass("/stock-out")}>
               Stock Out
-            </Link>
+            </button>
 
-            <Link href="/stock-return" className={linkClass("/stock-return")}>
+            <button onClick={() => go("/stock-return")} className={linkClass("/stock-return")}>
               Stock Return
-            </Link>
+            </button>
 
-            <Link href="/stock-scrap" className={linkClass("/stock-scrap")}>
+            <button onClick={() => go("/stock-scrap")} className={linkClass("/stock-scrap")}>
               Stock Scrap
-            </Link>
+            </button>
 
-            <Link href="/stock-adjust" className={linkClass("/stock-adjust")}>
+            <button onClick={() => go("/stock-adjust")} className={linkClass("/stock-adjust")}>
               Stock Adjust
-            </Link>
+            </button>
           </div>
         )}
 
@@ -97,17 +82,17 @@ const [reportsOpen, setReportsOpen] = useState(false);
 
         {managementOpen && (
           <div className="ml-5 space-y-1 border-l border-slate-700 pl-4">
-            <Link href="/projects" className={linkClass("/projects")}>
+            <button onClick={() => go("/projects")} className={linkClass("/projects")}>
               Projects
-            </Link>
+            </button>
 
-            <Link href="/add-project" className={linkClass("/add-project")}>
+            <button onClick={() => go("/add-project")} className={linkClass("/add-project")}>
               Add Project
-            </Link>
+            </button>
 
-            <Link href="/add-item" className={linkClass("/add-item")}>
+            <button onClick={() => go("/add-item")} className={linkClass("/add-item")}>
               Add Item
-            </Link>
+            </button>
           </div>
         )}
 
@@ -120,16 +105,13 @@ const [reportsOpen, setReportsOpen] = useState(false);
 
         {reportsOpen && (
           <div className="ml-5 space-y-1 border-l border-slate-700 pl-4">
-            <Link href="/movements" className={linkClass("/movements")}>
+            <button onClick={() => go("/movements")} className={linkClass("/movements")}>
               Movements
-            </Link>
+            </button>
 
-            <Link
-              href="/project-usage"
-              className={linkClass("/project-usage")}
-            >
-              Project Usage
-            </Link>
+            <button onClick={() => go("/project-usage")} className={linkClass("/project-usage")}>
+              Project Summary
+            </button>
           </div>
         )}
       </nav>
