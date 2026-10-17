@@ -11,6 +11,7 @@ export default function StockScrapForm({
   projects: any[];
 }) {
   const [form, setForm] = useState({
+    source: "warehouse",
     item_id: "",
     project_id: "",
     quantity: "",
@@ -39,8 +40,9 @@ export default function StockScrapForm({
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        source: form.source,
         item_id: Number(form.item_id),
-        project_id: form.project_id ? Number(form.project_id) : null,
+        project_id: form.source === "site" && form.project_id ? Number(form.project_id) : null,
         quantity: Number(form.quantity),
         remark: form.remark,
       }),
@@ -52,7 +54,8 @@ export default function StockScrapForm({
       setMessage("บันทึก Scrap สำเร็จ");
 
       setForm({
-        item_id: "",
+        source: "warehouse",
+    item_id: "",
         project_id: "",
         quantity: "",
         remark: "",
@@ -75,6 +78,12 @@ export default function StockScrapForm({
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
+        <label className="block text-sm font-semibold">ตำแหน่งของที่ชำรุด
+          <select name="source" value={form.source} onChange={handleChange} className="mt-2 w-full rounded-xl border border-slate-300 p-3">
+            <option value="warehouse">ในคลัง — หักยอดคลัง</option>
+            <option value="site">ที่โครงการ — หักยอดที่ไซต์</option>
+          </select>
+        </label>
         <select
           name="item_id"
           value={form.item_id}
@@ -97,12 +106,14 @@ export default function StockScrapForm({
         </select>
 
         <select
+          required={form.source === "site"}
+          disabled={form.source !== "site"}
           name="project_id"
           value={form.project_id}
           onChange={handleChange}
           className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
         >
-          <option value="">-- เลือก Project ถ้ามี --</option>
+          <option value="">-- เลือกโครงการที่ของชำรุด --</option>
 
           {projects.map((project) => (
             <option key={project.id} value={project.id}>
@@ -132,7 +143,7 @@ export default function StockScrapForm({
         />
 
         <div className="rounded-xl bg-red-50 p-4 text-sm text-red-700">
-          การบันทึก Scrap จะตัดจำนวนออกจาก Current Stock และบันทึก Movement Type = SCRAP
+          {form.source === "site" ? "ชำรุดที่ไซต์: ลดของคงค้างของโครงการ โดยไม่หักคลังซ้ำ" : "ชำรุดในคลัง: ลดจำนวนคงเหลือในคลัง"}
         </div>
 
         <div className="flex gap-4 pt-2">

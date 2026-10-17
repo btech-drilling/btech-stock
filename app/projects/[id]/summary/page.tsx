@@ -1,3 +1,5 @@
+import {allMovementRows,projectPositions, isReturnable, positionNeedsReview, visibleRemark} from '@/lib/project-stock';
+import StockIcon from '@/app/components/StockIcon';
 export const dynamic = "force-dynamic";
 
 import { supabase } from "@/lib/supabase";
@@ -21,7 +23,7 @@ export default async function ProjectSummaryPage({
     return <div>ไม่พบข้อมูลโครงการ</div>;
   }
 
-  const { data: movements, error: movementError } = await supabase
+  const { data: movements, error: movementError } = await allMovementRows(supabase
     .from("stock_movements")
     .select(`
       id,
@@ -38,53 +40,18 @@ export default async function ProjectSummaryPage({
       )
     `)
     .eq("project_id", projectId)
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false }));
 
   if (movementError) {
     return <div>Error: {movementError.message}</div>;
   }
 
-  const summaryMap = new Map<string, any>();
-
-  movements?.forEach((m: any) => {
-    const item = m.items;
-    if (!item) return;
-
-    const key = String(item.id ?? `${item.item_code}-${item.item_type}-${item.unit}`);
-
-    if (!summaryMap.has(key)) {
-        summaryMap.set(key, {
-        key,
-        item_code: item.item_code,
-        item_name: item.item_name,
-        item_type: item.item_type,
-        unit: item.unit,
-        out: 0,
-        returnQty: 0,
-        scrap: 0,
-        net_used: 0,
-      });
-    }
-
-    const row = summaryMap.get(key);
-    const qty = Math.abs(Number(m.quantity ?? 0));
-
-    if (m.movement_type === "OUT") row.out += qty;
-    if (m.movement_type === "RETURN") row.returnQty += qty;
-    if (m.movement_type === "SCRAP") row.scrap += qty;
-
-    row.net_used = row.out - row.returnQty - row.scrap;
+  const ledger = projectPositions((movements??[]).map((m:any)=>({...m,item_id:m.items?.id??'unknown',project_id:projectId})));
+  const summary = ledger.map(row=>{
+    const item=(movements??[]).find((m:any)=>String(m.items?.id)===row.itemId)?.items as any;
+    return {...row,key:row.itemId,item_code:item?.item_code,item_name:item?.item_name,item_type:item?.item_type,unit:item?.unit,returnQty:row.returned,scrap:row.siteScrap,net_used:row.balance};
   });
-
-  const summary = Array.from(summaryMap.values()).sort((a, b) =>
-    a.item_code.localeCompare(b.item_code)
-  );
-
-  const totalOut = summary.reduce((sum, row) => sum + row.out, 0);
-  const totalReturn = summary.reduce((sum, row) => sum + row.returnQty, 0);
-  const totalScrap = summary.reduce((sum, row) => sum + row.scrap, 0);
-  const totalNet = summary.reduce((sum, row) => sum + row.net_used, 0);
-
+  const pending = summary.filter(r=>isReturnable(r.item_type??'')&&(r.balance>0||positionNeedsReview(r)));
   function itemTypeBadgeClass(value: string) {
     if (value === "TOOL") {
       return "rounded-full bg-orange-100 px-2 py-1 text-[11px] font-semibold text-orange-700";
@@ -144,30 +111,13 @@ export default async function ProjectSummaryPage({
         </Link>
       </div>
 
-      <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-4">
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-sm text-slate-500">Total OUT</p>
-          <p className="mt-2 text-3xl font-bold text-red-600">{totalOut}</p>
-        </div>
-
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-sm text-slate-500">Total RETURN</p>
-          <p className="mt-2 text-3xl font-bold text-blue-600">
-            {totalReturn}
-          </p>
-        </div>
-
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-sm text-slate-500">Total SCRAP</p>
-          <p className="mt-2 text-3xl font-bold text-red-700">{totalScrap}</p>
-        </div>
-
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <p className="text-sm text-slate-500">Net Used</p>
-          <p className="mt-2 text-3xl font-bold text-slate-900">{totalNet}</p>
-        </div>
+      <div className="stock-metrics">
+        <div className="stock-metric"><StockIcon name="project" tone="blue"/><div><small>รายการที่เคยเบิก</small><strong>{summary.length}</strong></div></div>
+        <div className="stock-metric"><StockIcon name="clock" tone="amber"/><div><small>อุปกรณ์รอคืน / ตรวจสอบ</small><strong>{pending.length}</strong></div></div>
       </div>
-
+      <div className="stock-notice tone-blue">คงค้าง = เบิก − คืน − ชำรุดที่ไซต์ที่ระบุชัดเจน • วัสดุสิ้นเปลืองเป็นยอดเบิกสุทธิ ไม่ถือว่าต้องคืนทั้งหมด</div>
+      {summary.some(positionNeedsReview)&&<div className="stock-notice tone-amber">มี SCRAP เดิมหรือยอดผิดปกติที่ต้องตรวจสอบ รายการ SCRAP เดิมยังไม่หักจากยอดที่ไซต์ เพราะระบบเดิมหักจากคลังด้วย</div>}
+      <div className="stock-panel-footer"><Link href={`/stock-locations?project=${projectId}`}>ดูยอดและสถานะรอคืน</Link><Link href="/stock-return" className="stock-primary">บันทึกรับคืน</Link><Link href="/stock-scrap">บันทึกชำรุด</Link></div>
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div className="flex items-center justify-between border-b border-slate-200 p-5">
           <h2 className="text-xl font-bold text-slate-900">
@@ -187,8 +137,8 @@ export default async function ProjectSummaryPage({
               <th className="p-4">Type</th>
               <th className="p-4 text-right">OUT</th>
               <th className="p-4 text-right">RETURN</th>
-              <th className="p-4 text-right">SCRAP</th>
-              <th className="p-4 text-right">NET USED</th>
+              <th className="p-4 text-right">ชำรุดที่ไซต์</th>
+              <th className="p-4 text-right">คงค้าง / เบิกสุทธิ</th>
               <th className="p-4">Unit</th>
             </tr>
           </thead>
@@ -222,7 +172,7 @@ export default async function ProjectSummaryPage({
                   </td>
 
                   <td className="p-4 text-right font-bold text-slate-900">
-                    {row.net_used}
+                    {row.net_used}{positionNeedsReview(row)&&<span className="stock-badge tone-amber">ตรวจสอบ</span>}
                   </td>
 
                   <td className="p-4 text-slate-600">{row.unit}</td>
@@ -297,7 +247,7 @@ export default async function ProjectSummaryPage({
                       {Math.abs(Number(m.quantity))} {m.items?.unit}
                     </td>
 
-                    <td className="p-4 text-slate-600">{m.remark}</td>
+                    <td className="p-4 text-slate-600">{visibleRemark(m.remark)}</td>
                   </tr>
                 );
               })

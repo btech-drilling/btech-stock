@@ -38,7 +38,7 @@ export default async function LowStockPage() {
     <div>
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <p className="text-sm font-semibold text-red-600">
+          <p className="text-sm font-semibold text-orange-700">
             STOCK ALERT
           </p>
 
@@ -47,7 +47,7 @@ export default async function LowStockPage() {
           </h1>
 
           <p className="mt-1 text-slate-500">
-            Tools and consumables at or below a positive minimum stock. Assets deployed to projects are excluded.
+            เครื่องมือและวัสดุที่ถึงหรือต่ำกว่าขั้นต่ำ · ไม่รวม ASSET ที่นำไปใช้ในโครงการ
           </p>
         </div>
 
@@ -59,9 +59,9 @@ export default async function LowStockPage() {
         </Link>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-red-200 bg-white shadow-sm">
-        <div className="border-b border-red-100 bg-red-50 p-5">
-          <h2 className="text-xl font-bold text-red-700">
+      <div className="overflow-hidden rounded-2xl border border-orange-100 bg-white shadow-sm">
+        <div className="border-b border-orange-100 bg-orange-50 p-5">
+          <h2 className="text-xl font-bold text-orange-700">
             Total Low Stock: {lowStockItems.length}
           </h2>
         </div>
@@ -124,7 +124,7 @@ export default async function LowStockPage() {
                     {item.unit}
                   </td>
 
-                  <td className="p-4 text-right font-bold text-red-600">
+                  <td className={"p-4 text-right font-bold " + (currentStock < minimumStock ? "text-red-700" : "text-orange-700")}>
                     {currentStock}
                   </td>
 

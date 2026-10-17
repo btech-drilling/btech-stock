@@ -6,7 +6,7 @@ export default function ProjectCloseButton({
   id: number;
 }) {
   async function handleClose() {
-    const ok = confirm("ต้องการปิด Project นี้ใช่ไหม?");
+    const ok = confirm("ปิดโครงการนี้? ระบบจะตรวจอุปกรณ์รอคืนก่อนปิด");
     if (!ok) return;
 
     const res = await fetch("/api/projects/close", {

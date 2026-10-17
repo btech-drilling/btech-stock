@@ -1,3 +1,4 @@
+import Link from 'next/link';
 export const dynamic = "force-dynamic";
 
 import { supabase } from "@/lib/supabase";
@@ -140,6 +141,7 @@ export default async function ProjectUsagePage() {
 
   return (
     <div>
+      <div className="stock-notice tone-blue">หน้านี้สรุปการเบิกและต้นทุน · <Link href="/stock-locations" className="font-semibold underline">ดูของที่ไซต์และอุปกรณ์รอคืน</Link></div>
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-slate-800">
           Project Summary

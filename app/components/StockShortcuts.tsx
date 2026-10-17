@@ -1,0 +1,3 @@
+import Link from 'next/link';
+import StockIcon from './StockIcon';
+export default function StockShortcuts(){return <div className="stock-shortcuts">{[['/stock-locations','box','ตำแหน่งของในคลัง / ไซต์','ดูยอดแยกตามสถานที่','blue'],['/stock-out','out','เบิกไปโครงการ','ส่งอุปกรณ์ไปทำงาน','teal'],['/stock-return','return','รับคืนจากไซต์','บันทึกของกลับเข้าคลัง','teal'],['/stock-locations?view=returns','clock','ติดตามของรอคืน','ตรวจอุปกรณ์ก่อนปิดโครงการ','amber']].map(([href,icon,title,sub,tone])=><Link href={href} key={href} className="stock-shortcut"><StockIcon name={icon} tone={tone}/><span><strong>{title}</strong><small>{sub}</small></span><span className="stock-shortcut-arrow">›</span></Link>)}</div>}

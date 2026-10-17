@@ -1,3 +1,4 @@
+import {allMovementRows,projectPositions} from '@/lib/project-stock';
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 
@@ -14,7 +15,7 @@ export async function POST(req: Request) {
 
     const { item_id, project_id, quantity, remark } = body;
 
-    if (!item_id || !project_id || !quantity || quantity <= 0) {
+    if (!item_id || !project_id || !Number.isFinite(Number(quantity)) || Number(quantity) <= 0) {
       return NextResponse.json({
         success: false,
         error: "ข้อมูลไม่ครบถ้วน",
@@ -34,6 +35,10 @@ export async function POST(req: Request) {
       });
     }
 
+    const {data:history,error:historyError}=await allMovementRows(supabase.from('stock_movements').select('item_id,project_id,movement_type,quantity,remark').eq('item_id',item_id).eq('project_id',project_id));
+    if(historyError)return NextResponse.json({success:false,error:historyError.message},{status:500});
+    const position=projectPositions(history??[])[0];
+    if(!position || position.invalid || Number(quantity)>position.balance)return NextResponse.json({success:false,error:'จำนวนคืนเกินยอดเบิกคงค้างของโครงการ กรุณาตรวจหน้าคลัง / ของที่ไซต์'},{status:400});
     const newStock = Number(item.current_stock) + Number(quantity);
 
     const { error: updateError } = await supabase

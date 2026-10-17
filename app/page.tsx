@@ -1,3 +1,5 @@
+import StockIcon from './components/StockIcon';
+import StockShortcuts from './components/StockShortcuts';
 import { isLowStock as needsReplenishment } from "@/lib/stock-alert";
 export const dynamic = "force-dynamic";
 
@@ -30,7 +32,7 @@ export default async function Home({
     `)
     .order("item_code", { ascending: true });
 
-  const { data: projects } = await supabase.from("projects").select("id");
+  const { data: projects } = await supabase.from("projects").select("id,status");
 
   const { data: movements } = await supabase
     .from("stock_movements")
@@ -298,30 +300,31 @@ export default async function Home({
         </Link>
       </div>
 
+      <StockShortcuts/>
       <div className="mb-8 grid grid-cols-1 gap-5 md:grid-cols-4">
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <p className="text-sm text-slate-500">Total Inventory Value</p>
+          <StockIcon name="box"/><p className="mt-3 text-sm text-slate-500">Total Inventory Value</p>
           <h2 className="mt-2 text-3xl font-bold text-slate-900">
             ฿{totalInventoryValue.toLocaleString()}
           </h2>
         </div>
 
-        <div className="rounded-2xl border border-red-200 bg-red-50 p-6 shadow-sm">
-          <p className="text-sm text-red-500">Low Stock Items</p>
-          <h2 className="mt-2 text-3xl font-bold text-red-600">
+        <div className="rounded-2xl border border-orange-100 bg-orange-50 p-6 shadow-sm">
+          <StockIcon name="alert" tone="amber"/><p className="mt-3 text-sm text-orange-700">Low Stock Items</p>
+          <h2 className="mt-2 text-3xl font-bold text-orange-700">
             {lowStockItems}
           </h2>
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <p className="text-sm text-slate-500">Active Projects</p>
+          <StockIcon name="project" tone="blue"/><p className="mt-3 text-sm text-slate-500">Active Projects</p>
           <h2 className="mt-2 text-3xl font-bold text-blue-700">
-            {projectList.length}
+            {projectList.filter(p=>p.status === "ACTIVE").length}
           </h2>
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <p className="text-sm text-slate-500">Total Project Cost</p>
+          <StockIcon name="check"/><p className="mt-3 text-sm text-slate-500">Total Project Cost</p>
           <h2 className="mt-2 text-3xl font-bold text-green-700">
             ฿{totalProjectCost.toLocaleString()}
           </h2>
@@ -377,7 +380,7 @@ export default async function Home({
           </div>
         </div>
 
-        <div className="rounded-2xl border border-red-200 bg-red-50 p-6 shadow-sm">
+        <div className="rounded-2xl border border-orange-100 bg-orange-50 p-6 shadow-sm">
           <div className="mb-4 flex items-start justify-between gap-4">
             <div>
               <h2 className="text-xl font-bold text-red-700">
