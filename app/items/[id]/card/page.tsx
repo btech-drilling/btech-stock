@@ -1,3 +1,4 @@
+import { isLowStock as needsReplenishment } from "@/lib/stock-alert";
 export const dynamic = "force-dynamic";
 
 import { supabase } from "@/lib/supabase";
@@ -45,7 +46,7 @@ export default async function ItemStockCardPage({
   const minimumStock = Number(item.minimum_stock ?? 0);
   const unitCost = Number(item.unit_cost ?? 0);
   const stockValue = currentStock * unitCost;
-  const isLowStock = currentStock <= minimumStock;
+  const isLowStock = needsReplenishment(item);
 
   const totalIn =
     movements

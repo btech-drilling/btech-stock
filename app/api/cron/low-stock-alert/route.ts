@@ -1,3 +1,4 @@
+import { isLowStock as needsReplenishment, replenishmentMessage } from "@/lib/stock-alert";
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 
@@ -49,14 +50,13 @@ function buildLowStockMessage(items: any[]) {
   const lines = items.map((item, index) => {
     const currentStock = Number(item.current_stock ?? 0);
     const minimumStock = Number(item.minimum_stock ?? 0);
-    const shortage = Math.max(minimumStock - currentStock, 0);
 
     return `${index + 1}. [${item.item_type ?? "CONSUMABLE"}] ${
       item.item_code
     } - ${item.item_name}
 คงเหลือ: ${currentStock} ${item.unit}
 ขั้นต่ำ: ${minimumStock} ${item.unit}
-ควรสั่งเพิ่มอย่างน้อย: ${shortage} ${item.unit}`;
+${replenishmentMessage(item)}`;
   });
 
   return `🚨 BTECH Stock Alert
@@ -90,7 +90,7 @@ export async function GET() {
   const lowItems =
     allItems?.filter(
       (item) =>
-        Number(item.current_stock ?? 0) <= Number(item.minimum_stock ?? 0)
+        needsReplenishment(item)
     ) ?? [];
 
   const alertsToSend = [];

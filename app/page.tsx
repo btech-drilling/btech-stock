@@ -1,3 +1,4 @@
+import { isLowStock as needsReplenishment } from "@/lib/stock-alert";
 export const dynamic = "force-dynamic";
 
 import { supabase } from "@/lib/supabase";
@@ -74,9 +75,9 @@ export default async function Home({
       Number(b.current_stock ?? 0) * Number(b.unit_cost ?? 0);
 
     const isLowA =
-      Number(a.current_stock ?? 0) <= Number(a.minimum_stock ?? 0);
+      needsReplenishment(a);
     const isLowB =
-      Number(b.current_stock ?? 0) <= Number(b.minimum_stock ?? 0);
+      needsReplenishment(b);
 
     if (sort === "current_stock") {
       return Number(a.current_stock ?? 0) - Number(b.current_stock ?? 0);
@@ -105,7 +106,7 @@ export default async function Home({
   const allLowStockList = itemList
     .filter(
       (item) =>
-        Number(item.current_stock ?? 0) <= Number(item.minimum_stock ?? 0)
+        needsReplenishment(item)
     )
     .sort(
       (a, b) =>
@@ -568,8 +569,7 @@ export default async function Home({
           <tbody>
             {sortedItemList.map((item) => {
               const isLowStock =
-                Number(item.current_stock ?? 0) <=
-                Number(item.minimum_stock ?? 0);
+                needsReplenishment(item);
 
               const itemType = item.item_type ?? "CONSUMABLE";
 

@@ -1,3 +1,4 @@
+import { isLowStock as needsReplenishment } from "@/lib/stock-alert";
 export const dynamic = "force-dynamic";
 
 import { supabase } from "@/lib/supabase";
@@ -26,7 +27,7 @@ export default async function LowStockPage() {
   const lowStockItems = (items ?? [])
     .filter(
       (item) =>
-        Number(item.current_stock ?? 0) <= Number(item.minimum_stock ?? 0)
+        needsReplenishment(item)
     )
     .sort(
       (a, b) =>
@@ -46,7 +47,7 @@ export default async function LowStockPage() {
           </h1>
 
           <p className="mt-1 text-slate-500">
-            All items where current stock is less than or equal to minimum stock
+            Tools and consumables at or below a positive minimum stock. Assets deployed to projects are excluded.
           </p>
         </div>
 
@@ -132,7 +133,7 @@ export default async function LowStockPage() {
                   </td>
 
                   <td className="p-4 text-right font-bold text-orange-600">
-                    {shortage}
+                    {shortage > 0 ? shortage : "ถึงขั้นต่ำ"}
                   </td>
 
                   <td className="p-4">
