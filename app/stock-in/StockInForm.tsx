@@ -74,7 +74,7 @@ export default function StockInForm({
           name="item_id"
           value={form.item_id}
           onChange={handleChange}
-          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
           required
         >
           <option value="">-- เลือก Item --</option>
@@ -94,7 +94,7 @@ export default function StockInForm({
           name="project_id"
           value={form.project_id}
           onChange={handleChange}
-          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
         >
           <option value="">-- ไม่ระบุ Project / เข้าคลังกลาง --</option>
 
@@ -111,7 +111,7 @@ export default function StockInForm({
           placeholder="จำนวนรับเข้า"
           value={form.quantity}
           onChange={handleChange}
-          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
           required
         />
 
@@ -120,13 +120,13 @@ export default function StockInForm({
           placeholder="หมายเหตุ เช่น รับของจากร้าน / คืนจากไซต์ / PO No."
           value={form.remark}
           onChange={handleChange}
-          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
         />
 
         <div className="flex gap-4 pt-2">
           <button
             type="submit"
-            className="rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white hover:bg-orange-600"
+            className="rounded-xl bg-teal-600 px-6 py-3 font-semibold text-white hover:bg-teal-700"
           >
             Save Stock In
           </button>

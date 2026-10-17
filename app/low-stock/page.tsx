@@ -132,7 +132,7 @@ export default async function LowStockPage() {
                     {minimumStock}
                   </td>
 
-                  <td className="p-4 text-right font-bold text-orange-600">
+                  <td className="p-4 text-right font-bold text-amber-700">
                     {shortage > 0 ? shortage : "ถึงขั้นต่ำ"}
                   </td>
 
@@ -147,7 +147,7 @@ export default async function LowStockPage() {
 
                       <Link
                         href={`/edit-item/${item.id}`}
-                        className="font-semibold text-orange-600 hover:underline"
+                        className="font-semibold text-teal-700 hover:underline"
                       >
                         Edit
                       </Link>

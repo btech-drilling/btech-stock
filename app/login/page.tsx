@@ -25,32 +25,33 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-100 p-6">
-      <div className="w-full max-w-md rounded-3xl border border-slate-200 bg-white p-10 shadow-sm">
-        <div className="mb-8 text-center">
-          <p className="text-sm font-semibold text-orange-600">
-            BTECH STOCK SYSTEM
+    <main className="stock-login flex min-h-screen items-center justify-center p-6">
+      <div className="stock-logincard w-full max-w-md bg-white p-10">
+        <div className="mb-8 text-center"><div className="stock-loginmark">B</div>
+          <p className="text-sm font-semibold text-teal-700">
+            STOCK & EQUIPMENT
           </p>
 
           <h1 className="mt-2 text-4xl font-bold text-slate-900">
-            Login
+            เข้าสู่ระบบ
           </h1>
 
           <p className="mt-2 text-slate-500">
-            Inventory Management
+            ระบบคลังสินค้าและอุปกรณ์ BTECH
           </p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-5">
           <div>
             <label className="mb-2 block text-sm font-semibold text-slate-700">
-              Username
+              อีเมล
             </label>
 
             <input
+              autoComplete="username"
               type="email"
               placeholder="admin@btech.local"
-              className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+              className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -59,13 +60,14 @@ export default function LoginPage() {
 
           <div>
             <label className="mb-2 block text-sm font-semibold text-slate-700">
-              Password
+              รหัสผ่าน
             </label>
 
             <input
+              autoComplete="current-password"
               type="password"
               placeholder="••••••••"
-              className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+              className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -73,9 +75,9 @@ export default function LoginPage() {
           </div>
 
           <button
-            className="w-full rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white hover:bg-orange-600"
+            className="w-full rounded-xl bg-teal-600 px-6 py-3 font-semibold text-white hover:bg-teal-700"
           >
-            Login
+            เข้าสู่ระบบ
           </button>
         </form>
 

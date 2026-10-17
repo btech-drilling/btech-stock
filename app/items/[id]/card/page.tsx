@@ -116,7 +116,7 @@ export default async function ItemStockCardPage({
     <div>
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <p className="text-sm font-semibold text-orange-600">STOCK CARD</p>
+          <p className="text-sm font-semibold text-teal-700">STOCK CARD</p>
 
           <h1 className="text-4xl font-bold text-slate-900">
             {item.item_code}
@@ -205,7 +205,7 @@ export default async function ItemStockCardPage({
 
             <div>
               <p className="text-sm text-slate-500">Minimum Stock</p>
-              <p className="mt-1 text-3xl font-bold text-orange-600">
+              <p className="mt-1 text-3xl font-bold text-teal-700">
                 {minimumStock}
               </p>
             </div>

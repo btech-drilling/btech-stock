@@ -17,7 +17,7 @@ export default async function StockReturnPage() {
   return (
     <div>
       <div className="mb-8">
-        <p className="text-sm font-semibold text-orange-600">
+        <p className="text-sm font-semibold text-teal-700">
           STOCK MOVEMENT
         </p>
 

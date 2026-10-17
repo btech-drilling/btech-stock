@@ -29,7 +29,7 @@ export default function ProjectCloseButton({
   return (
     <button
       onClick={handleClose}
-      className="text-orange-600 hover:underline"
+      className="text-teal-700 hover:underline"
     >
       Close
     </button>

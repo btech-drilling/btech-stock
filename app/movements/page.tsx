@@ -96,7 +96,7 @@ export default async function MovementsPage({
   function typeLink(value: string) {
     const className =
       type === value
-        ? "rounded-xl bg-orange-500 px-4 py-2 text-white"
+        ? "rounded-xl bg-teal-600 px-4 py-2 text-white"
         : "rounded-xl border border-slate-300 bg-white px-4 py-2 text-slate-700 hover:bg-slate-100";
 
     return { href: buildUrl(value), className };
@@ -141,7 +141,7 @@ export default async function MovementsPage({
   return (
     <div>
       <div className="mb-8">
-        <p className="text-sm font-semibold text-orange-600">
+        <p className="text-sm font-semibold text-teal-700">
           STOCK AUDIT TRAIL
         </p>
 
@@ -178,7 +178,7 @@ export default async function MovementsPage({
             <select
               name="project"
               defaultValue={project}
-              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none focus:border-orange-500"
+              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none focus:border-teal-600"
             >
               <option value="ALL">All Projects</option>
 
@@ -199,14 +199,14 @@ export default async function MovementsPage({
               name="q"
               defaultValue={q}
               placeholder="Search item, project, remark, type..."
-              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none focus:border-orange-500"
+              className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none focus:border-teal-600"
             />
           </div>
 
           <div className="flex gap-3">
             <button
               type="submit"
-              className="rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white hover:bg-orange-600"
+              className="rounded-xl bg-teal-600 px-6 py-3 font-semibold text-white hover:bg-teal-700"
             >
               Filter
             </button>

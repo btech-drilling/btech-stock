@@ -156,7 +156,7 @@ export default async function ProjectDetailPage({
                   {item.scrapQty}
                 </td>
 
-                <td className="px-4 py-3 text-right font-bold text-orange-600">
+                <td className="px-4 py-3 text-right font-bold text-teal-700">
                   {item.netQty}
                 </td>
 

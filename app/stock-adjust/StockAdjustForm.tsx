@@ -74,7 +74,7 @@ export default function StockAdjustForm({
           name="item_id"
           value={form.item_id}
           onChange={handleChange}
-          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
           required
         >
           <option value="">-- เลือก Item --</option>
@@ -93,7 +93,7 @@ export default function StockAdjustForm({
           placeholder="จำนวนที่นับจริง"
           value={form.actual_stock}
           onChange={handleChange}
-          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
           required
         />
 
@@ -102,13 +102,13 @@ export default function StockAdjustForm({
           placeholder="หมายเหตุ เช่น ตรวจนับ stock เริ่มต้น / พบของขาด / พบของเกิน"
           value={form.remark}
           onChange={handleChange}
-          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
         />
 
         <div className="flex gap-4 pt-2">
           <button
             type="submit"
-            className="rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white hover:bg-orange-600"
+            className="rounded-xl bg-teal-600 px-6 py-3 font-semibold text-white hover:bg-teal-700"
           >
             Save Adjustment
           </button>

@@ -43,7 +43,7 @@ export default async function ProjectsPage({
 
     const className =
       status === value
-        ? "rounded-xl bg-orange-500 px-4 py-2 text-white"
+        ? "rounded-xl bg-teal-600 px-4 py-2 text-white"
         : "rounded-xl border border-slate-300 bg-white px-4 py-2 text-slate-700 hover:bg-slate-100";
 
     return { href, className };
@@ -53,7 +53,7 @@ export default async function ProjectsPage({
     <div>
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <p className="text-sm font-semibold text-orange-600">
+          <p className="text-sm font-semibold text-teal-700">
             PROJECT MANAGEMENT
           </p>
 
@@ -66,7 +66,7 @@ export default async function ProjectsPage({
 
         <Link
           href="/add-project"
-          className="rounded-xl bg-orange-500 px-5 py-3 font-semibold text-white hover:bg-orange-600"
+          className="rounded-xl bg-teal-600 px-5 py-3 font-semibold text-white hover:bg-teal-700"
         >
           + Add Project
         </Link>
@@ -86,7 +86,7 @@ export default async function ProjectsPage({
           name="q"
           defaultValue={q}
           placeholder="Search project code, name, client, location..."
-          className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none focus:border-orange-500"
+          className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none focus:border-teal-600"
         />
 
         <button

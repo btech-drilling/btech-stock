@@ -79,7 +79,7 @@ export default function StockScrapForm({
           name="item_id"
           value={form.item_id}
           onChange={handleChange}
-          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
           required
         >
           <option value="">-- เลือก Item ที่เสียหาย / ทิ้ง --</option>
@@ -100,7 +100,7 @@ export default function StockScrapForm({
           name="project_id"
           value={form.project_id}
           onChange={handleChange}
-          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
         >
           <option value="">-- เลือก Project ถ้ามี --</option>
 
@@ -118,7 +118,7 @@ export default function StockScrapForm({
           placeholder="จำนวนที่ Scrap / เสียหาย / หาย"
           value={form.quantity}
           onChange={handleChange}
-          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
           required
         />
 
@@ -127,7 +127,7 @@ export default function StockScrapForm({
           placeholder="หมายเหตุ เช่น Rod งอ / Barrel ตกหลุม / Bit แตก / หายจากไซต์"
           value={form.remark}
           onChange={handleChange}
-          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
           required
         />
 

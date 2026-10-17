@@ -79,7 +79,7 @@ export default function StockReturnForm({
           name="item_id"
           value={form.item_id}
           onChange={handleChange}
-          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
           required
         >
           <option value="">-- เลือก Item ที่คืน --</option>
@@ -100,7 +100,7 @@ export default function StockReturnForm({
           name="project_id"
           value={form.project_id}
           onChange={handleChange}
-          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
           required
         >
           <option value="">-- เลือก Project ที่คืนของ --</option>
@@ -119,7 +119,7 @@ export default function StockReturnForm({
           placeholder="จำนวนคืน"
           value={form.quantity}
           onChange={handleChange}
-          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
           required
         />
 
@@ -128,13 +128,13 @@ export default function StockReturnForm({
           placeholder="หมายเหตุ เช่น คืนจาก site / ใช้ไม่หมด / คืนหลังปิดหลุม"
           value={form.remark}
           onChange={handleChange}
-          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+          className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
         />
 
         <div className="flex gap-4 pt-2">
           <button
             type="submit"
-            className="rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white hover:bg-orange-600"
+            className="rounded-xl bg-teal-600 px-6 py-3 font-semibold text-white hover:bg-teal-700"
           >
             Save Stock Return
           </button>

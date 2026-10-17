@@ -121,7 +121,7 @@ export default async function ProjectSummaryPage({
     <div>
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <p className="text-sm font-semibold text-orange-600">
+          <p className="text-sm font-semibold text-teal-700">
             PROJECT SUMMARY
           </p>
 

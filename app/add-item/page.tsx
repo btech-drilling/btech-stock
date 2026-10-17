@@ -119,7 +119,7 @@ export default function AddItemPage() {
   return (
     <div>
       <div className="mb-8">
-        <p className="text-sm font-semibold text-orange-600">
+        <p className="text-sm font-semibold text-teal-700">
           INVENTORY MANAGEMENT
         </p>
 
@@ -143,7 +143,7 @@ export default function AddItemPage() {
               type="file"
               accept="image/*"
               onChange={handleImageChange}
-              className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+              className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
             />
 
             {imagePreview && (
@@ -167,7 +167,7 @@ export default function AddItemPage() {
               value={form.item_code}
               onChange={handleChange}
               placeholder="เช่น ROD-NQ-3M"
-              className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+              className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
               required
             />
           </div>
@@ -182,7 +182,7 @@ export default function AddItemPage() {
               value={form.item_name}
               onChange={handleChange}
               placeholder="ชื่ออุปกรณ์"
-              className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+              className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
               required
             />
           </div>
@@ -196,7 +196,7 @@ export default function AddItemPage() {
               name="item_type"
               value={form.item_type}
               onChange={handleChange}
-              className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+              className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
               required
             >
               <option value="CONSUMABLE">
@@ -224,7 +224,7 @@ export default function AddItemPage() {
                 value={form.category}
                 onChange={handleChange}
                 placeholder="Rod / Bit / Mud"
-                className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+                className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
               />
             </div>
 
@@ -238,7 +238,7 @@ export default function AddItemPage() {
                 value={form.unit}
                 onChange={handleChange}
                 placeholder="pcs / rods / bags"
-                className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+                className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
               />
             </div>
           </div>
@@ -255,7 +255,7 @@ export default function AddItemPage() {
                 value={form.minimum_stock}
                 onChange={handleChange}
                 placeholder="จำนวนขั้นต่ำ"
-                className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+                className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
               />
             </div>
 
@@ -270,7 +270,7 @@ export default function AddItemPage() {
                 value={form.unit_cost}
                 onChange={handleChange}
                 placeholder="ราคาทุนต่อหน่วย"
-                className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+                className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
               />
             </div>
           </div>
@@ -279,7 +279,7 @@ export default function AddItemPage() {
             <button
               type="submit"
               disabled={saving}
-              className="cursor-pointer rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white hover:bg-orange-600 disabled:cursor-not-allowed disabled:bg-slate-400"
+              className="cursor-pointer rounded-xl bg-teal-600 px-6 py-3 font-semibold text-white hover:bg-teal-700 disabled:cursor-not-allowed disabled:bg-slate-400"
             >
               {saving ? "Saving..." : "Save Item"}
             </button>

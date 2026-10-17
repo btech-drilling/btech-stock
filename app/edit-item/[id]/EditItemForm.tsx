@@ -115,7 +115,7 @@ export default function EditItemForm({ item }: { item: any }) {
   return (
     <div>
       <div className="mb-8">
-        <p className="text-sm font-semibold text-orange-600">
+        <p className="text-sm font-semibold text-teal-700">
           INVENTORY MANAGEMENT
         </p>
 
@@ -149,7 +149,7 @@ export default function EditItemForm({ item }: { item: any }) {
               type="file"
               accept="image/*"
               onChange={handleImageChange}
-              className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+              className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
             />
           </div>
 
@@ -163,7 +163,7 @@ export default function EditItemForm({ item }: { item: any }) {
               placeholder="Item Code"
               value={form.item_code}
               onChange={handleChange}
-              className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+              className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
               required
             />
           </div>
@@ -178,7 +178,7 @@ export default function EditItemForm({ item }: { item: any }) {
               placeholder="Item Name"
               value={form.item_name}
               onChange={handleChange}
-              className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+              className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
               required
             />
           </div>
@@ -192,7 +192,7 @@ export default function EditItemForm({ item }: { item: any }) {
               name="item_type"
               value={form.item_type}
               onChange={handleChange}
-              className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+              className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
               required
             >
               <option value="CONSUMABLE">
@@ -220,7 +220,7 @@ export default function EditItemForm({ item }: { item: any }) {
                 placeholder="Category"
                 value={form.category}
                 onChange={handleChange}
-                className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+                className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
               />
             </div>
 
@@ -234,7 +234,7 @@ export default function EditItemForm({ item }: { item: any }) {
                 placeholder="Unit"
                 value={form.unit}
                 onChange={handleChange}
-                className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+                className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
               />
             </div>
           </div>
@@ -251,7 +251,7 @@ export default function EditItemForm({ item }: { item: any }) {
                 placeholder="Minimum Stock"
                 value={form.minimum_stock}
                 onChange={handleChange}
-                className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+                className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
               />
             </div>
 
@@ -266,7 +266,7 @@ export default function EditItemForm({ item }: { item: any }) {
                 placeholder="ราคาทุนต่อหน่วย"
                 value={form.unit_cost}
                 onChange={handleChange}
-                className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+                className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
               />
             </div>
           </div>
@@ -279,7 +279,7 @@ export default function EditItemForm({ item }: { item: any }) {
             <button
               type="submit"
               disabled={saving}
-              className="rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white hover:bg-orange-600 disabled:cursor-not-allowed disabled:bg-slate-400"
+              className="rounded-xl bg-teal-600 px-6 py-3 font-semibold text-white hover:bg-teal-700 disabled:cursor-not-allowed disabled:bg-slate-400"
             >
               {saving ? "Saving..." : "Save Change"}
             </button>

@@ -271,7 +271,7 @@ export default async function Home({
 
   function sortLinkClass(sortKey: string) {
     return sort === sortKey
-      ? "rounded-lg bg-orange-500 px-3 py-2 text-sm font-semibold text-white"
+      ? "rounded-lg bg-teal-600 px-3 py-2 text-sm font-semibold text-white"
       : "rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100";
   }
 
@@ -279,7 +279,7 @@ export default async function Home({
     <div>
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <p className="text-sm font-semibold text-orange-600">
+          <p className="text-sm font-semibold text-teal-700">
             BTECH INVENTORY CONTROL
           </p>
 
@@ -292,7 +292,7 @@ export default async function Home({
 
         <Link
           href="/add-item"
-          className="rounded-xl bg-orange-500 px-5 py-3 font-semibold text-white shadow hover:bg-orange-600"
+          className="rounded-xl bg-teal-600 px-5 py-3 font-semibold text-white shadow hover:bg-teal-700"
         >
           + Add Item
         </Link>
@@ -466,7 +466,7 @@ export default async function Home({
 
                 <div className="h-3 overflow-hidden rounded-full bg-slate-100">
                   <div
-                    className="h-full rounded-full bg-orange-500"
+                    className="h-full rounded-full bg-teal-600"
                     style={{
                       width: `${(v.value / maxTypeValue) * 100}%`,
                     }}
@@ -526,12 +526,12 @@ export default async function Home({
               name="q"
               defaultValue={q}
               placeholder="Search item code, name, type, category, unit..."
-              className="flex-1 rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none focus:border-orange-500"
+              className="flex-1 rounded-xl border border-slate-300 bg-white px-4 py-3 outline-none focus:border-teal-600"
             />
 
             <button
               type="submit"
-              className="rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white hover:bg-orange-600"
+              className="rounded-xl bg-teal-600 px-6 py-3 font-semibold text-white hover:bg-teal-700"
             >
               Search
             </button>
@@ -646,7 +646,7 @@ export default async function Home({
 
                       <Link
                         href={`/edit-item/${item.id}`}
-                        className="font-semibold text-orange-600 hover:underline"
+                        className="font-semibold text-teal-700 hover:underline"
                       >
                         Edit
                       </Link>

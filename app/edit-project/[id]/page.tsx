@@ -100,7 +100,7 @@ export default function EditProjectPage() {
   return (
     <div>
       <div className="mb-8">
-        <p className="text-sm font-semibold text-orange-600">
+        <p className="text-sm font-semibold text-teal-700">
           PROJECT MANAGEMENT
         </p>
 
@@ -120,7 +120,7 @@ export default function EditProjectPage() {
             placeholder="Project Code"
             value={form.project_code}
             onChange={handleChange}
-            className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+            className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
             required
           />
 
@@ -129,7 +129,7 @@ export default function EditProjectPage() {
             placeholder="Project Name"
             value={form.project_name}
             onChange={handleChange}
-            className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+            className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
             required
           />
 
@@ -138,7 +138,7 @@ export default function EditProjectPage() {
             placeholder="Client Name"
             value={form.client_name}
             onChange={handleChange}
-            className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+            className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
           />
 
           <input
@@ -146,14 +146,14 @@ export default function EditProjectPage() {
             placeholder="Location"
             value={form.location_text}
             onChange={handleChange}
-            className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+            className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
           />
 
           <select
             name="status"
             value={form.status}
             onChange={handleChange}
-            className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-orange-500"
+            className="w-full rounded-xl border border-slate-300 p-3 outline-none focus:border-teal-600"
           >
             <option value="ACTIVE">ACTIVE</option>
             <option value="HOLD">HOLD</option>
@@ -163,7 +163,7 @@ export default function EditProjectPage() {
           <div className="flex gap-4 pt-2">
             <button
               type="submit"
-              className="rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white hover:bg-orange-600"
+              className="rounded-xl bg-teal-600 px-6 py-3 font-semibold text-white hover:bg-teal-700"
             >
               Save Changes
             </button>
